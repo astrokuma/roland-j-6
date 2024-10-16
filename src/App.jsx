@@ -7,7 +7,6 @@ import TransposeControl from "./components/TransposeControl";
 import { BackspaceIcon } from "@heroicons/react/24/solid";
 import ScaleBox from "./components/ScaleBox";
 import Footer from "./components/Footer";
-
 import { stripChordName, transposeNote, transposeStrippedChord } from "./utils/helperFunctions";
 
 const reassembleChord = (transposedChord, originalModifiers) => {
@@ -111,32 +110,44 @@ const ChordChart = () => {
     });
   };
 
-  const handleChordToggle = (notes, button) => {
+  const handleChordToggle = (notes, button, isSelected) => {
     setSelectedNotes((prevNotes) => {
-      const isAlreadySelected = prevNotes.some((noteArray) => noteArray.join(",") === notes.join(","));
-
-      if (isAlreadySelected) {
-        // Remove from selection order when deselecting
-        setSelectionOrder((prev) => prev.filter((b) => b !== button));
-        setSelectedButtons((prev) => prev.filter((b) => b !== button));
+      if (isSelected) {
         return prevNotes.filter((noteArray) => noteArray.join(",") !== notes.join(","));
       } else {
-        // Add to selection order when selecting
-        setSelectionOrder((prev) => [...prev, button]);
-        setSelectedButtons((prev) => [...prev, button]);
         return [...prevNotes, notes];
       }
     });
+
+    setSelectedButtons((prevButtons) => {
+      if (isSelected) {
+        return prevButtons.filter((b) => b !== button);
+      } else {
+        return [...prevButtons, button];
+      }
+    });
+
+    setSelectionOrder((prevOrder) => {
+      if (isSelected) {
+        return prevOrder.filter((b) => b !== button);
+      } else {
+        return [...prevOrder, button];
+      }
+    });
   };
-  const buttonClassName = "px-4 py-2 bg-gray-950 hover:bg-gray-950/70 rounded-lg shadow-sm";
+
+  const buttonClassName = "bg-gray-950 hover:bg-gray-950/70 rounded-lg shadow-sm relative flex items-center justify-center rounded-lg px-4 py-1 shadow-sm focus:outline-none appearance-none cursor-pointer h-10 w-10";
 
   return (
-    <div className="flex flex-col items-center  justify-between gap-4  h-screen w-screen">
-      <div className="flex flex-col  gap-4 pt-8 px-4 md:px-8 w-full items-center  lg:w-4/5">
-        {/* //header and chord display */}
-        <div className="flex items-center w-full justify-between  text-white font-medium max-w-5xl">
-          <h1 className=" border-sky-950 border-4 shadow-md rounded-lg px-6 flex  gap-2 items-center text-4xl h-full text-sky-950 font-black">J • 6</h1>
-          <div className="bg-sky-950 shadow-md rounded-lg p-3 flex flex-col gap-2 items-center ">
+    <div className="w-full flex flex-col gap-4 h-screen mx-auto">
+      {/* //header and chord display */}
+      <div className="flex flex-col gap-2 sm:gap-4">
+        <div className="px-[4%] sticky backdrop-blur-md shadow-lg shadow-neutral-950 rounded-md -top-[12.4rem] sm:-top-32 xl:top-0 offset z-10 max-w-6xl mx-auto w-full h-full grid grid-cols-12 gap-3 sm:gap-4 text-yellow-600 font-medium py-2 sm:py-4">
+          <div className="col-span-12 xl:col-span-2 sm:col-span-3 sm:col-start-2 xl:col-start-1 gap-1 bg-sky-950 shadow-md rounded-lg flex flex-col justify-center items-center font-black py-2">
+            <p className="text-md leading-none text-yellow-700">Roland</p>
+            <p className="text-3xl leading-none text-yellow-600">J · 6</p>
+          </div>
+          <div className="col-span-12 sm:col-span-7 xl:col-span-5 bg-sky-950 shadow-md rounded-lg p-3 flex flex-col gap-2 items-center ">
             <ChordBankSelector
               chords={chordChartWithNumbers}
               onChange={setSelectedNumber}
@@ -154,9 +165,9 @@ const ChordChart = () => {
           />
           <button
             onClick={handleClearAll}
-            className="px-8 py-2 bg-red-800 hover:bg-red-900 text-white font-semibold rounded-md transition-colors duration-200 flex flex-row items-center justify-center gap-1 h-28"
+            className="col-span-3 xl:col-span-2 py-2 bg-red-900 hover:bg-red-800 text-yellow-400 font-semibold rounded-md transition-colors duration-200 flex flex-row items-center justify-center gap-1 h-28"
           >
-            <BackspaceIcon className="w-10" />
+            <BackspaceIcon className="w-8" />
           </button>
         </div>
         {/* //chord display */}
@@ -165,6 +176,7 @@ const ChordChart = () => {
             chords={displayedChords}
             selectedNotes={selectedNotes}
             handleChordToggle={handleChordToggle}
+            selectionOrder={selectionOrder}
           />
         )}
 

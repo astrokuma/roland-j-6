@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className=" text-neutral-400 text-sm w-full  gap-8 flex items-center justify-center bg-sky-950 py-4">
+    <div className="text-neutral-400 text-sm w-full gap-8 flex items-center justify-center bg-sky-950 py-4">
       <a
         href="https://ko-fi.com/astrokuma"
         target="_blank"
