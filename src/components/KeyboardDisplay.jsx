@@ -1,7 +1,7 @@
 import React from "react";
 import { getSelectionNumber } from "../utils/selectionUtils";
 
-const KeyboardDisplay = ({ selectedButtons, selectionOrder }) => {
+const KeyboardDisplay = ({ selectedButtons, selectionOrder, hasError }) => {
   const KeyButton = ({ num, isTop }) => {
     const isSelected = selectedButtons.includes(num);
     const selectionNumber = getSelectionNumber(num, selectionOrder);
@@ -9,8 +9,8 @@ const KeyboardDisplay = ({ selectedButtons, selectionOrder }) => {
     return (
       <div
         className={`flex items-center justify-center ${isTop ? "h-7" : "h-8"} w-6 outline outline-2 
-        ${isTop ? "outline-yellow-700" : "outline-yellow-600"} rounded-sm 
-        ${isSelected ? (isTop ? "bg-yellow-700" : "bg-yellow-600") : "bg-neutral-950"}`}
+          ${isTop ? "outline-yellow-700" : "outline-yellow-600"} rounded-sm 
+          ${isSelected ? (isTop ? (hasError ? "bg-red-500" : "bg-yellow-700") : hasError ? "bg-red-500" : "bg-yellow-600") : "bg-neutral-950"}`}
       >
         {isSelected && <p className="text-neutral-950 text-sm font-bold">{selectionNumber}</p>}
       </div>

@@ -3,10 +3,12 @@ import NoteTags from "./NoteTags";
 import Piano from "./Piano";
 import { getSelectionNumber } from "../utils/selectionUtils";
 
-const Card = ({ chord, onClick, selected, selectionOrder, num }) => {
+const Card = ({ chord, onClick, selected, selectionOrder, num, hasError, errorKey }) => {
   return (
     <div
-      className={`m-1 group transition-all outline outline-4 ${selected ? "outline-yellow-800 bg-gray-900" : "hover:outline-yellow-900 outline-yellow-950 bg-gray-950"} rounded-lg cursor-pointer`}
+      className={`m-1 group transition-all outline outline-4 
+        ${selected ? "outline-yellow-800 bg-gray-900" : hasError && errorKey === num ? "outline-red-500 bg-gray-950" : "hover:outline-yellow-900 outline-yellow-950 bg-gray-950"} 
+        rounded-lg cursor-pointer`}
       onClick={onClick}
     >
       <div className={`relative flex transition-all rounded-t-md items-center justify-between text-center py-4 ${selected ? "bg-yellow-800" : "bg-yellow-950 group-hover:bg-yellow-900"}`}>

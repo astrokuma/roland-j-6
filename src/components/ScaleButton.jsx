@@ -4,10 +4,10 @@ import NoteTags from "./NoteTags";
 const ScaleButton = ({ scaleName, notes, matchPercentage, root, matchedNotes }) => {
   return (
     <li className="flex">
-      <div className="w-full border-4 border-sky-900 hover:border-sky-800 rounded-lg group">
-        <button className="w-full text-center bg-sky-900 group-hover:bg-sky-800 text-white font-semibold py-2 px-4">
+      <div className="w-full border-4 border-sky-900 rounded-lg">
+        <div className="w-full text-center bg-sky-900 text-white font-semibold py-2 px-4">
           {scaleName} ({matchPercentage}% match)
-        </button>
+        </div>
 
         <div className="p-4 bg-sky-950/50">
           <NoteTags
