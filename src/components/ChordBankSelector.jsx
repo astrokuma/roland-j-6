@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ChordBankSelector = ({ chords = [], onChange, buttonClassName }) => {
+const ChordBankSelector = ({ chords = [], onChange }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   if (!chords || chords.length === 0) {

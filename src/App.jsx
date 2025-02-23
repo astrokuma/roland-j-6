@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import { normalizeNote } from "./utils/notes";
+import { Note } from "@tonaljs/tonal";
 import ChordBankSelector from "./components/ChordBankSelector";
 import CardDisplay from "./components/CardDisplay";
 import KeyboardDisplay from "./components/KeyboardDisplay";
 import chordData from "./ChordChart.json";
-import TransposeControl from "./components/TransposeControl";
 import { BackspaceIcon } from "@heroicons/react/24/solid";
 import ScaleBox from "./components/ScaleBox";
 import Footer from "./components/Footer";
-import { stripChordName, transposeNote, transposeStrippedChord } from "./utils/helperFunctions";
 
-const reassembleChord = (transposedChord, originalModifiers) => {
-  const parts = transposedChord.split("/").map((part) => part.trim());
-
+const reassembleChord = (originalModifiers) => {
   // Handle the case where we may have a root with modifiers and a bass
   const rootWithModifiers = parts[0];
   const bass = parts.length > 1 ? parts[1] : null;
@@ -37,12 +35,10 @@ const reassembleChord = (transposedChord, originalModifiers) => {
 // Main Component
 const ChordChart = () => {
   const [selectedNumber, setSelectedNumber] = useState("1");
-  const [transposition, setTransposition] = useState(0);
-  const [displayTransposition, setDisplayTransposition] = useState(0);
-  const [displayedChords, setDisplayedChords] = useState([]);
   const [selectedNotes, setSelectedNotes] = useState([]);
   const [selectedButtons, setSelectedButtons] = useState([]);
   const [selectionOrder, setSelectionOrder] = useState([]);
+  const [selectedChords, setSelectedChords] = useState([]);
 
   //returns chord data for each chord bank along with numberID
   const chordChartWithNumbers = useMemo(() => {
@@ -56,6 +52,7 @@ const ChordChart = () => {
       chords: chart.chords.map((chord, chordIndex) => ({
         name: chord.name,
         notes: chord.notes,
+        root: chord.root,
         button: (chordIndex + 1).toString(),
       })),
     }));
@@ -67,72 +64,53 @@ const ChordChart = () => {
   }, [chordChartWithNumbers, selectedNumber]);
 
   const handleClearAll = () => {
-    setSelectedNotes([]);
-    setSelectedButtons([]);
-    setSelectionOrder([]);
+    setSelectedNotes([]); // Clears selected notes
+    setSelectedChords([]); // Clears selected chords
+    setSelectedButtons([]); // Clears selected buttons
+    setSelectionOrder([]); // Clears selection order
+    console.log("All selections cleared");
   };
 
   //returns transposed chord object
-  const transposeChords = useMemo(
-    () => (chords, semitones) => {
-      return chords.map((chordObj) => {
-        const { name, notes, button } = chordObj;
-        const { strippedChord, originalModifiers } = stripChordName(name);
-        const transposedStrippedChord = transposeStrippedChord(strippedChord, semitones);
-        const transposedChordName = reassembleChord(transposedStrippedChord, originalModifiers);
+  const displayedChords = useMemo(() => {
+    if (!selectedChart) return [];
+    return selectedChart.chords.map((chord) => ({
+      ...chord,
+      transposedNotes: chord.notes.map(
+        (n) => normalizeNote(Note.pitchClass(n), chord.root) // Properly formatted
+      ),
+    }));
+  }, [selectedChart]);
 
-        return {
-          originalName: name,
-          transposedName: transposedChordName,
-          transposedNotes: notes.map((note) => transposeNote(note, semitones)),
-          button,
-        };
-      });
-    },
-    []
-  );
+  const handleChordToggle = (chord, button) => {
+    const isSelected = selectedNotes.some((notes) => notes.notes.join(",") === chord.notes.join(","));
 
-  useEffect(() => {
-    if (selectedChart) {
-      const newDisplayedChords = transposeChords(selectedChart.chords, transposition);
-      setDisplayedChords(newDisplayedChords);
-    }
-  }, [selectedChart, transposition, transposeChords]);
-
-  const handleTranspose = (direction) => {
-    setTransposition((prev) => {
-      const newTransposition = Math.max(-12, Math.min(12, prev + direction));
-      return newTransposition;
-    });
-    setDisplayTransposition((prev) => {
-      const newDisplayTransposition = Math.max(-12, Math.min(12, prev + direction));
-      return newDisplayTransposition;
-    });
-  };
-
-  const handleChordToggle = (notes, button, isSelected) => {
-    setSelectedNotes((prevNotes) => {
+    // Update selectedNotes state
+    setSelectedNotes((prev) => {
       if (isSelected) {
-        return prevNotes.filter((noteArray) => noteArray.join(",") !== notes.join(","));
+        return prev.filter((notes) => notes.notes.join(",") !== chord.notes.join(","));
       } else {
-        return [...prevNotes, notes];
+        return [...prev, { notes: chord.notes, button }];
       }
     });
 
-    setSelectedButtons((prevButtons) => {
-      if (isSelected) {
-        return prevButtons.filter((b) => b !== button);
-      } else {
-        return [...prevButtons, button];
+    // Update selectedChords and selectedButtons
+    setSelectedChords((prev) => {
+      const exists = prev.some((c) => c.name === chord.name);
+      if (exists) {
+        return prev.filter((c) => c.name !== chord.name);
       }
+      return [...prev, chord];
     });
 
-    setSelectionOrder((prevOrder) => {
-      if (isSelected) {
-        return prevOrder.filter((b) => b !== button);
-      } else {
-        return [...prevOrder, button];
-      }
+    setSelectedButtons((prev) => {
+      const newButtons = prev.includes(button) ? prev.filter((b) => b !== button) : [...prev, button];
+      return newButtons;
+    });
+
+    setSelectionOrder((prev) => {
+      const newOrder = prev.includes(button) ? prev.filter((b) => b !== button) : [...prev, button];
+      return newOrder;
     });
   };
 
@@ -140,22 +118,16 @@ const ChordChart = () => {
 
   return (
     <div className="w-full flex flex-col gap-4 h-screen mx-auto">
-      {/* //header and chord display */}
       <div className="flex flex-col gap-2 sm:gap-4">
-        <div className="px-[4%] sticky backdrop-blur-md shadow-lg shadow-neutral-950 rounded-md -top-[12.4rem] sm:-top-32 xl:top-0 offset z-10 max-w-6xl mx-auto w-full h-full grid grid-cols-12 gap-3 sm:gap-4 text-yellow-600 font-medium py-2 sm:py-4">
+        <div className="px-[4%] sticky backdrop-blur-md shadow-lg shadow-neutral-950 rounded-md -top-[9.4rem] sm:-top-[5.2rem] xl:top-0 offset z-10 max-w-6xl mx-auto w-full h-full grid grid-cols-12 gap-3 sm:gap-4 text-yellow-600 font-medium py-2 sm:py-4">
           <div className="col-span-12 xl:col-span-2 sm:col-span-3 sm:col-start-2 xl:col-start-1 gap-1 bg-sky-950 shadow-md rounded-lg flex flex-col justify-center items-center font-black py-2">
             <p className="text-md leading-none text-yellow-700">Roland</p>
             <p className="text-3xl leading-none text-yellow-600">J · 6</p>
           </div>
-          <div className="col-span-12 sm:col-span-7 xl:col-span-5 bg-sky-950 shadow-md rounded-lg p-3 flex flex-col gap-2 items-center ">
+          <div className="animate-headShake col-span-12 sm:col-span-7 xl:col-span-5 bg-sky-950 shadow-md rounded-lg p-3 flex flex-col gap-2 items-center ">
             <ChordBankSelector
               chords={chordChartWithNumbers}
               onChange={setSelectedNumber}
-              buttonClassName={buttonClassName}
-            />
-            <TransposeControl
-              onTranspose={handleTranspose}
-              displayTransposition={displayTransposition}
               buttonClassName={buttonClassName}
             />
           </div>
@@ -170,7 +142,6 @@ const ChordChart = () => {
             <BackspaceIcon className="w-8" />
           </button>
         </div>
-        {/* //chord display */}
         {selectedChart && (
           <CardDisplay
             chords={displayedChords}
@@ -179,9 +150,8 @@ const ChordChart = () => {
             selectionOrder={selectionOrder}
           />
         )}
-
-        {/* //scale info */}
-        {selectedNotes && <ScaleBox selectedChords={selectedNotes} />}
+        {console.log(selectedChords)}
+        {selectedChords.length > 0 && <ScaleBox selectedChords={selectedChords} />}
       </div>
       <Footer />
     </div>

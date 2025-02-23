@@ -126,7 +126,7 @@
         {
           "name": "Bm7b5",
           "notes": ["B2", "A3", "D4", "F4"],
-          "root": "Bm7b"
+          "root": "B"
         }
       ]
     },
@@ -151,12 +151,12 @@
         {
           "name": "D7#9",
           "notes": ["D#3", "G3", "C#4", "F#4"],
-          "root": "D7#"
+          "root": "D#"
         },
         {
           "name": "E7#9",
           "notes": ["E3", "G#3", "D4", "G4"],
-          "root": "E7#"
+          "root": "E#"
         },
         {
           "name": "FM9",
@@ -351,7 +351,7 @@
         {
           "name": "E7#9",
           "notes": ["E3", "G#3", "D4", "G4"],
-          "root": "E7#"
+          "root": "E#"
         },
         {
           "name": "Fm9",
@@ -386,7 +386,7 @@
         {
           "name": "Bm7b5",
           "notes": ["B2", "A3", "D4", "F4"],
-          "root": "Bm7b"
+          "root": "B"
         }
       ]
     },
@@ -506,7 +506,7 @@
         {
           "name": "Am7b5",
           "notes": ["A2", "C4", "D#4", "G4"],
-          "root": "Am7b"
+          "root": "A"
         },
         {
           "name": "A#",
@@ -571,7 +571,7 @@
         {
           "name": "Am7b5",
           "notes": ["A2", "C4", "D#4", "G4"],
-          "root": "Am7b"
+          "root": "A"
         },
         {
           "name": "A#",
@@ -601,7 +601,7 @@
         {
           "name": "Dm7b5",
           "notes": ["D3", "C4", "F4", "G#4"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "D#M7",
@@ -636,7 +636,7 @@
         {
           "name": "Am7b5",
           "notes": ["A2", "C4", "D#4", "G4"],
-          "root": "Am7b"
+          "root": "A"
         },
         {
           "name": "G#/A#",
@@ -666,7 +666,7 @@
         {
           "name": "Dm7b5",
           "notes": ["D3", "G#3", "C4", "F4"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "D#M7",
@@ -701,7 +701,7 @@
         {
           "name": "Am7b5",
           "notes": ["A2", "C4", "D#4", "G4"],
-          "root": "Am7b"
+          "root": "A"
         },
         {
           "name": "Cm7/A#",
@@ -731,7 +731,7 @@
         {
           "name": "Dm7b5",
           "notes": ["D3", "C4", "F4", "G#4"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "D#M7#5",
@@ -756,7 +756,7 @@
         {
           "name": "G7#9",
           "notes": ["G2", "B3", "F4", "A#4"],
-          "root": "G7#"
+          "root": "G#"
         },
         {
           "name": "G#M7b5",
@@ -766,7 +766,7 @@
         {
           "name": "Am7b5",
           "notes": ["A2", "C4", "D#4", "G4"],
-          "root": "Am7b"
+          "root": "A"
         },
         {
           "name": "A#m7",
@@ -831,7 +831,7 @@
         {
           "name": "Am7b5",
           "notes": ["A2", "C4", "D#4", "G4"],
-          "root": "Am7b"
+          "root": "A"
         },
         {
           "name": "A#m7",
@@ -841,7 +841,7 @@
         {
           "name": "Bm7b5",
           "notes": ["B2", "A3", "D4", "F4"],
-          "root": "Bm7b"
+          "root": "B"
         }
       ]
     },
@@ -2401,7 +2401,7 @@
         {
           "name": "Em7b5/F",
           "notes": ["F4", "D5", "E5", "G5"],
-          "root": "Em7b"
+          "root": "E"
         }
       ]
     },
@@ -3181,7 +3181,7 @@
         {
           "name": "Bm7b5",
           "notes": ["B2", "F3", "A3", "D4"],
-          "root": "Bm7b"
+          "root": "B"
         }
       ]
     },
@@ -3521,12 +3521,12 @@
         {
           "name": "CM7#5",
           "notes": ["C4", "E4", "G#4", "B4"],
-          "root": "CM7#"
+          "root": "C#"
         },
         {
           "name": "Dm7b5",
           "notes": ["D4", "F4", "Ab4", "C5"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "G7",
@@ -3571,7 +3571,7 @@
         {
           "name": "CM7#5/G#",
           "notes": ["G#4", "B4", "C5", "E5"],
-          "root": "CM7#"
+          "root": "C#"
         }
       ]
     },
@@ -3596,7 +3596,7 @@
         {
           "name": "Dm7b5",
           "notes": ["Ab3", "D4", "C5", "F5"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "EbM7",
@@ -3666,7 +3666,7 @@
         {
           "name": "EM7#11",
           "notes": ["E3", "G#3", "A#3", "D#4"],
-          "root": "EM7#"
+          "root": "E#"
         },
         {
           "name": "Fm9",
@@ -4176,7 +4176,7 @@
         {
           "name": "Dm7b5",
           "notes": ["D3", "Ab3", "C4", "F4"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "D#dim7",
@@ -4201,7 +4201,7 @@
         {
           "name": "Gm7b13",
           "notes": ["G2", "F3", "Bb3", "Eb4"],
-          "root": "Gm7b"
+          "root": "G"
         },
         {
           "name": "G#M9",
@@ -4451,7 +4451,7 @@
         {
           "name": "DM7#11",
           "notes": ["D3", "F#3", "G#3", "C#4"],
-          "root": "DM7#"
+          "root": "D#"
         },
         {
           "name": "F#m11",
@@ -4511,7 +4511,7 @@
         {
           "name": "Em7b13",
           "notes": ["E2", "G3", "C4", "D4"],
-          "root": "Em7b"
+          "root": "E"
         },
         {
           "name": "Eb/F",
@@ -4591,7 +4591,7 @@
         {
           "name": "Gm7b5",
           "notes": ["G3", "Bb3", "Db4", "F4"],
-          "root": "Gm7b"
+          "root": "G"
         },
         {
           "name": "Ab9",
@@ -4651,7 +4651,7 @@
         {
           "name": "CM7#5",
           "notes": ["G3", "G#3", "C4", "E4"],
-          "root": "CM7#"
+          "root": "C#"
         },
         {
           "name": "Gm7",
@@ -4661,7 +4661,7 @@
         {
           "name": "G7#5",
           "notes": ["G3", "B3", "D#4", "F4"],
-          "root": "G7#"
+          "root": "G#"
         },
         {
           "name": "AbM7",
@@ -4671,7 +4671,7 @@
         {
           "name": "Fm7b5/B",
           "notes": ["B3", "D#4", "F4", "G#4"],
-          "root": "Fm7b"
+          "root": "F"
         },
         {
           "name": "Bb13/D",
@@ -4756,7 +4756,7 @@
         {
           "name": "Gm7b5/C#",
           "notes": ["C#3", "F3", "G3", "A#3"],
-          "root": "Gm7b"
+          "root": "G"
         },
         {
           "name": "FM7/E",
@@ -5066,7 +5066,7 @@
         {
           "name": "Bm7b5",
           "notes": ["B3", "D4", "F4", "A4"],
-          "root": "Bm7b"
+          "root": "B"
         }
       ]
     },
@@ -5141,7 +5141,7 @@
         {
           "name": "Cm7b5",
           "notes": ["C3", "F#3", "A#3", "D#4"],
-          "root": "Cm7b"
+          "root": "C"
         },
         {
           "name": "Db7sus",
@@ -5241,7 +5241,7 @@
         {
           "name": "Gm7b5",
           "notes": ["G2", "Db3", "F3", "C4"],
-          "root": "Gm7b"
+          "root": "G"
         },
         {
           "name": "Eb/Ab",
@@ -5261,7 +5261,7 @@
         {
           "name": "BM7#11",
           "notes": ["B2", "Eb3", "F3", "Bb3"],
-          "root": "BM7#"
+          "root": "B#"
         }
       ]
     },
@@ -5466,7 +5466,7 @@
         {
           "name": "CM7#11",
           "notes": ["C3", "E4", "F#4", "B4"],
-          "root": "CM7#"
+          "root": "C#"
         },
         {
           "name": "DbM7#11",
@@ -5491,7 +5491,7 @@
         {
           "name": "FM7#11",
           "notes": ["F3", "A4", "B4", "E5"],
-          "root": "FM7#"
+          "root": "F#"
         },
         {
           "name": "F#m11",
@@ -5706,7 +5706,7 @@
         {
           "name": "Dm7b5/9",
           "notes": ["E4", "F4", "Ab4", "C5"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "GbM7/9",
@@ -5776,7 +5776,7 @@
         {
           "name": "Dm7b5",
           "notes": ["D4", "F4", "G#4", "C5"],
-          "root": "Dm7b"
+          "root": "D"
         },
         {
           "name": "G7/D",
@@ -5826,7 +5826,7 @@
         {
           "name": "FM7b5",
           "notes": ["F3", "A3", "B3", "E4"],
-          "root": "FM7b"
+          "root": "F"
         },
         {
           "name": "Eb7/F",
@@ -5931,7 +5931,7 @@
         {
           "name": "Cm7b5",
           "notes": ["C3", "D#3", "F#3", "A#3"],
-          "root": "Cm7b"
+          "root": "C"
         },
         {
           "name": "C#dim7",
@@ -5941,7 +5941,7 @@
         {
           "name": "Em7b5/D",
           "notes": ["D3", "E3", "G3", "A#3"],
-          "root": "Em7b"
+          "root": "E"
         },
         {
           "name": "Fm7/D#",

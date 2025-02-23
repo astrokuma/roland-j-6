@@ -1,77 +1,81 @@
+// ScaleBox.jsx (updated)
 import React, { useMemo } from "react";
 import * as Scale from "@tonaljs/scale";
-import * as Note from "@tonaljs/note";
+import { Note } from "@tonaljs/tonal";
 import ScaleButton from "./ScaleButton";
-import NoteTags from "./NoteTags";
+import { normalizeNote } from "../utils/notes";
 
-const ScaleBox = ({ selectedChords }) => {
-  const allNotes = useMemo(() => {
-    const notes = [...new Set(selectedChords.flat())];
-    return notes;
-  }, [selectedChords]);
+const SCALE_MODES = ["major", "minor", "dorian", "mixolydian", "lydian", "phrygian", "locrian", "harmonic minor", "melodic minor", "major pentatonic", "minor pentatonic", "blues"];
 
-  const scaleNotes = useMemo(() => {
-    return [...new Set(allNotes.map((note) => Note.pitchClass(note)))].filter((note) => note !== "");
-  }, [allNotes]);
+const findMatchingScales = (inputNotes, root) => {
+  if (!inputNotes.length || !root) return [];
 
-  // Define the scale modes you want to check
-  const scaleModes = ["Major", "Minor", "Minor Pentatonic", "Major Pentatonic", "Harmonic Minor", "Blues", "Mixolydian", "Dorian"];
+  const tonic = Note.simplify(Note.pitchClass(root));
+  const uniqueNotes = [...new Set(inputNotes.map((n) => Note.simplify(n)))];
 
-  const possibleKeys = useMemo(() => {
-    if (scaleNotes.length === 0) return [];
+  return SCALE_MODES.flatMap((mode) => {
+    try {
+      const scale = Scale.scale(`${tonic} ${mode}`);
+      if (scale.empty) return null;
 
-    const keyMatches = [];
+      const scaleNotes = scale.notes.map((n) => Note.simplify(Note.pitchClass(n)));
+      const matchedNotes = uniqueNotes.filter((n) => scaleNotes.includes(n));
+      const match = Math.round((matchedNotes.length / uniqueNotes.length) * 100);
 
-    scaleNotes.forEach((tonic) => {
-      scaleModes.forEach((scaleType) => {
-        const scale = Scale.get(`${tonic} ${scaleType}`);
-        if (!scale.empty) {
-          const scaleNotesArray = scale.notes.map(Note.pitchClass);
-          const matchingNotes = scaleNotes.filter((note) => scaleNotesArray.includes(note));
+      return {
+        name: `${scale.tonic} ${mode}`,
+        notes: scaleNotes,
+        match,
+        root: scale.tonic,
+      };
+    } catch {
+      return null;
+    }
+  })
+    .filter(Boolean)
+    .sort((a, b) => b.match - a.match)
+    .slice(0, 6);
+};
 
-          if (matchingNotes.length > 0) {
-            const matchPercentage = (matchingNotes.length / scaleNotes.length) * 100;
-            if (matchPercentage > 86) {
-              keyMatches.push({
-                key: `${tonic} ${scaleType}`,
-                matchPercentage,
-                scaleNotes: scaleNotesArray.join(", "),
-              });
-            }
-          }
-        }
-      });
-    });
+const ScaleBox = ({ selectedChords = [] }) => {
+  const allNotes = useMemo(
+    () =>
+      selectedChords.flatMap((chord) =>
+        (chord.transposedNotes || [])
+          .map((n) => normalizeNote(n, chord.root)) // Now properly imported
+          .filter(Boolean)
+      ),
+    [selectedChords]
+  );
 
-    return keyMatches.sort((a, b) => b.matchPercentage - a.matchPercentage);
-  }, [scaleNotes]);
+  const root = selectedChords[0]?.root;
+  const scales = useMemo(() => findMatchingScales(allNotes, root), [allNotes, root]);
 
-  if (selectedChords.length === 0) {
-    return null;
-  }
+  let uniqueNotesArray = Array.isArray(allNotes) ? [...new Set(allNotes)] : [];
+  let uniqueNotes = uniqueNotesArray.join(" · ");
 
   return (
-    <div className="px-[4%] w-full max-w-6xl mx-auto flex flex-col gap-4 text-center text-gray-400">
-      <div className="flex items-center gap-4">
-        <p className="text-lg font-medium tracking-wide">NOTES:</p>
-        <NoteTags notes={scaleNotes} />
-      </div>
-      {possibleKeys.length > 0 ? (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
-          {possibleKeys.map((key, index) => (
-            <li
-              key={index}
-              className="flex"
-            >
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-4 text-gray-400">
+      {scales.length > 0 ? (
+        <>
+          <div className="flex justify-center">
+            <p className="border-4 border-slate-900 rounded-lg bg-slate-900 text-slate-400 font-semibold py-2 px-4 break-words">Notes in chords: {uniqueNotes}</p>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
+            {scales.map((scale, i) => (
               <ScaleButton
-                scaleKey={`${key.key} (${key.matchPercentage.toFixed(2)}% match)`}
-                scaleNotes={key.scaleNotes}
+                key={i}
+                scaleName={scale.name}
+                notes={scale.notes}
+                root={scale.root}
+                matchPercentage={scale.match}
+                matchedNotes={allNotes}
               />
-            </li>
-          ))}
-        </ul>
+            ))}
+          </ul>
+        </>
       ) : (
-        <p className="w-full text-center rounded-sm bg-sky-900 group-hover:bg-sky-800 text-white font-semibold py-2 px-4">SCALE: Unknown 😔</p>
+        <div className="w-full text-center rounded-t-sm bg-sky-900 text-white font-semibold py-2 px-4">SCALE: No matching scales found</div>
       )}
     </div>
   );

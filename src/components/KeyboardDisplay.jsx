@@ -4,15 +4,15 @@ import { getSelectionNumber } from "../utils/selectionUtils";
 const KeyboardDisplay = ({ selectedButtons, selectionOrder }) => {
   const KeyButton = ({ num, isTop }) => {
     const isSelected = selectedButtons.includes(num);
-
-    const backgroundColor = isSelected ? (isTop ? "bg-yellow-700" : "bg-yellow-600") : "bg-neutral-950";
+    const selectionNumber = getSelectionNumber(num, selectionOrder);
 
     return (
       <div
-        className={`flex items-center justify-center ${isTop ? "h-7" : "h-8"} w-6 outline outline-2 ${isTop ? "outline-yellow-700" : "outline-yellow-600"} rounded-sm ${backgroundColor}
-          ${num === "4" && isTop ? "mr-7" : ""}`}
+        className={`flex items-center justify-center ${isTop ? "h-7" : "h-8"} w-6 outline outline-2 
+        ${isTop ? "outline-yellow-700" : "outline-yellow-600"} rounded-sm 
+        ${isSelected ? (isTop ? "bg-yellow-700" : "bg-yellow-600") : "bg-neutral-950"}`}
       >
-        {isSelected && <p className="text-neutral-950 text-sm font-bold">{getSelectionNumber(num, selectionOrder)}</p>}
+        {isSelected && <p className="text-neutral-950 text-sm font-bold">{selectionNumber}</p>}
       </div>
     );
   };
