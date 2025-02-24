@@ -322,8 +322,8 @@ const App = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col gap-4">
-      <div className="w-full flex-1 flex-col gap-4 h-screen mx-auto">
+    <div className="min-h-dvh flex flex-col gap-4">
+      <div className="w-full flex-1 flex-col gap-4 h-dvh mx-auto">
         <div className="px-[2%] sticky backdrop-blur-md -top-[10.6rem] sm:-top-[8rem] xl:-top-14 z-10 mx-auto w-full h-full grid grid-cols-12 gap-2 font-medium py-2 sm:py-4">
           <p className="col-span-12 py-2 bg-bg text-lg leading-none font-black text-text text-center rounded-lg">Roland J · 6</p>
           <div className="col-span-12 md:col-span-6 xl:col-start-1 gap-1 bg-bg shadow-md rounded-lg flex flex-col justify-center items-center py-2">
