@@ -9,57 +9,15 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: #030712; /* Track color */
+    background: var(--sub-alt-color); /* Track color */
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #030712; /* Thumb color */
+    background-color: var(--bg-color); /* Thumb color */
     border-radius: 10px; /* Roundness of the thumb */
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: #082f49; /* Thumb color on hover */
+    background-color: var(--main-color); /* Thumb color on hover */
   }
-}
-
-/* Default Horizon Theme */
-:root {
-  --bg-color: #1c1e26;
-  --main-color: #c4a88a;
-  --caret-color: #bbbbbb;
-  --sub-color: #db886f;
-  --sub-alt-color: #17181f;
-  --text-color: #bbbbbb;
-  --error-color: #d55170;
-  --error-extra-color: #ff3d3d;
-  --colorful-error-color: #d55170;
-  --colorful-error-extra-color: #d55170;
-}
-
-/* Terrazzo Theme */
-[data-theme="terrazzo"] {
-  --bg-color: #f1e5da;
-  --main-color: #e0794e;
-  --caret-color: #e0794e;
-  --sub-color: #688e8f;
-  --sub-alt-color: #e3d3c6;
-  --text-color: #023e3b;
-  --error-color: #a01034;
-  --error-extra-color: #a01034;
-  --colorful-error-color: #a01034;
-  --colorful-error-extra-color: #a01034;
-}
-
-/* Bushido Theme */
-[data-theme="bushido"] {
-  --bg-color: #242933;
-  --main-color: #ec4c56;
-  --caret-color: #ec4c56;
-  --sub-color: #596172;
-  --sub-alt-color: #1c222d;
-  --text-color: #f6f0e9;
-  --error-color: #ec4c56;
-  --error-extra-color: #9b333a;
-  --colorful-error-color: #ecdc4c;
-  --colorful-error-extra-color: #bdb03d;
 }

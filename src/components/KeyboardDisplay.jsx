@@ -1,24 +1,25 @@
 import React from "react";
 import { getSelectionNumber } from "../utils/selectionUtils";
 
-const KeyboardDisplay = ({ selectedButtons, selectionOrder, hasError }) => {
+const KeyboardDisplay = ({ selectedButtons, selectionOrder, bankId }) => {
   const KeyButton = ({ num, isTop }) => {
-    const isSelected = selectedButtons.includes(num);
-    const selectionNumber = getSelectionNumber(num, selectionOrder);
+    const compositeId = `${bankId}-${num}`;
+    const isSelected = selectedButtons.includes(compositeId);
+    const selectionNumber = getSelectionNumber(compositeId, selectionOrder);
 
     return (
       <div
         className={`flex items-center justify-center ${isTop ? "h-7" : "h-8"} w-6 outline outline-2 
-          ${isTop ? "outline-yellow-700" : "outline-yellow-600"} rounded-sm 
-          ${isSelected ? (isTop ? (hasError ? "bg-red-500" : "bg-yellow-700") : hasError ? "bg-red-500" : "bg-yellow-600") : "bg-neutral-950"}`}
+        ${isTop ? "outline-caret" : "outline-main"} rounded-sm 
+        ${isSelected ? (isTop ? "bg-caret" : "bg-main") : "bg-sub-alt"}`}
       >
-        {isSelected && <p className="text-neutral-950 text-sm font-bold">{selectionNumber}</p>}
+        {selectionNumber && <p className="text-bg text-sm font-bold">{selectionNumber}</p>}
       </div>
     );
   };
 
   return (
-    <div className="col-span-9 sm:col-start-2 sm:col-span-7 xl:col-span-3 flex flex-col items-center justify-center gap-2 bg-sky-950 h-28 px-6 rounded-lg">
+    <div className="col-span-8 flex flex-col items-center justify-center gap-2 bg-bg h-28 px-6 rounded-lg">
       <div className="grid grid-flow-col mx-4 gap-2.5">
         {["2", "4", "7", "9", "11"].map((num) => (
           <KeyButton

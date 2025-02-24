@@ -1,7 +1,7 @@
 import React from "react";
 import { Note } from "@tonaljs/tonal";
 
-const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay }) => {
+const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay, missingNotes = [] }) => {
   const normalize = (note, rootNote) => {
     if (!note) return "";
     const cleaned = note.replace(/[0-9]/g, "");
@@ -21,42 +21,47 @@ const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay }) => {
     return Note.simplify(cleaned) || cleaned;
   };
 
-  // RESTORE MISSING LINES
   const safeNotes = Array.isArray(notes) ? notes.filter(Boolean) : [];
-  const uniqueNotes = [...new Set(safeNotes)];
-  // END OF RESTORED CODE
+  const safeMissingNotes = Array.isArray(missingNotes) ? missingNotes.filter(Boolean) : [];
+  const allNotes = [...safeNotes, ...safeMissingNotes];
+  const uniqueAllNotes = [...new Set(allNotes)];
 
   const normalizedRoot = root ? normalize(root, root) : null;
 
   return (
     <div className="flex flex-wrap justify-center gap-1.5 ">
-      {uniqueNotes.map((note, index) => {
+      {uniqueAllNotes.map((note, index) => {
         const displayNote = normalize(note, root);
         const isRoot = displayNote === normalizedRoot;
         const isAccidental = displayNote.includes("#") || displayNote.includes("b");
-        const isMatched = matchedNotes?.includes(displayNote);
+        const isMatched = matchedNotes?.includes(note);
+        const isMissing = safeMissingNotes.includes(note);
 
-        // Different logic for scale vs chord displays
-        let bgColor = "bg-yellow-600"; // Default for chords
-        if (isScaleDisplay) {
-          bgColor = "bg-none border-2 border-yellow-700 text-yellow-700"; // Default for scales
-          if (isRoot) bgColor = "bg-green-600";
-          if (isMatched) bgColor = "bg-yellow-600";
+        let bgColor;
+
+        if (isMissing) {
+          bgColor = "opacity-50 bg-none border-2 border-main text-main";
         } else {
-          if (isRoot) {
-            if (isAccidental) {
-              bgColor = "bg-green-600"; // Accidental is the root
-            } else {
-              bgColor = "bg-green-600"; // Regular root
+          if (isScaleDisplay) {
+            bgColor = "bg-none border-2 border-text text-text";
+            if (isRoot) bgColor = "bg-text";
+            if (isMatched) bgColor = "bg-main text-bg";
+          } else {
+            // Chord display logic with default background
+            bgColor = "bg-text text-bg"; // Restore default chord color
+            if (isRoot) {
+              bgColor = "bg-main text-bg";
+            }
+            if (isAccidental && !isRoot) {
+              bgColor = "bg-text text-bg";
             }
           }
-          if (isAccidental && !isRoot) bgColor = "bg-yellow-700"; // Accidental but not root
         }
 
         return (
           <span
             key={index}
-            className={`flex justify-center items-center text-gray-950 font-bold rounded-full w-8 h-8 text-sm transition-all ${bgColor}`}
+            className={`flex justify-center outline outline-2 outline-sub-alt items-center font-bold rounded-full w-8 h-8 text-sm ${bgColor}`}
           >
             {displayNote}
           </span>

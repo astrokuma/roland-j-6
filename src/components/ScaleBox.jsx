@@ -1,8 +1,8 @@
-// ScaleBox.jsx (updated)
 import React, { useMemo } from "react";
 import * as Scale from "@tonaljs/scale";
 import { Note } from "@tonaljs/tonal";
 import ScaleButton from "./ScaleButton";
+import NoteTags from "./NoteTags";
 import { normalizeNote } from "../utils/notes";
 
 const SCALE_MODES = ["major", "minor", "dorian", "mixolydian", "lydian", "phrygian", "locrian", "harmonic minor", "melodic minor", "major pentatonic", "minor pentatonic", "blues"];
@@ -52,14 +52,22 @@ const ScaleBox = ({ selectedChords = [] }) => {
   const scales = useMemo(() => findMatchingScales(allNotes, root), [allNotes, root]);
 
   let uniqueNotesArray = Array.isArray(allNotes) ? [...new Set(allNotes)] : [];
-  let uniqueNotes = uniqueNotesArray.join(" · ");
 
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col gap-4 text-gray-400">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-4">
       {scales.length > 0 ? (
         <>
-          <div className="flex justify-center">
-            <p className="border-4 border-slate-900 rounded-lg bg-slate-900 text-slate-400 font-semibold py-2 px-4 break-words">Notes in chords: {uniqueNotes}</p>
+          <div className="flex mt-4">
+            <div className="border-4 border-bg rounded-lg bg-bg text-text font-semibold py-2 px-4 break-words flex items-center gap-2">
+              <span>Notes in chords:</span>
+              <NoteTags
+                notes={uniqueNotesArray}
+                root={root}
+                matchedNotes={uniqueNotesArray}
+                isScaleDisplay={false}
+                missingNotes={[]}
+              />
+            </div>
           </div>
           <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
             {scales.map((scale, i) => (
@@ -75,7 +83,7 @@ const ScaleBox = ({ selectedChords = [] }) => {
           </ul>
         </>
       ) : (
-        <div className="w-full text-center rounded-t-sm bg-sky-900 text-white font-semibold py-2 px-4">SCALE: No matching scales found</div>
+        <div className="w-full text-center rounded-t-sm bg-bg text-white font-semibold py-2 px-4">SCALE: No matching scales found</div>
       )}
     </div>
   );
