@@ -4,18 +4,18 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="flex flex-grow group text-sub-alt text-sm w-full gap-4 items-center justify-center bg-main py-4">
+    <div className="flex flex-grow group text-secondary-50 text-sm w-full gap-4 items-center justify-center bg-secondary-500 py-4 mt-8">
       © {currentYear} Astro-Kuma. All rights reserved.
       <a
         href="https://ko-fi.com/astrokuma"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-sub-alt hover:text-bg flex items-center gap-1"
+        className="text-secondary-50 hover:underline flex items-center gap-1"
       >
         <span>
           {/* SVG Heart */}
           <svg
-            className="w-4 h-4 transition-all group-hover:fill-bg"
+            className="w-4 h-4 group-hover:fill-background-50"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"

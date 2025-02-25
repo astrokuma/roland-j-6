@@ -1,24 +1,24 @@
 import { Note } from "@tonaljs/tonal";
 
+// Convert note to MIDI number (C4 = 60, C#4 = 61, etc.)
+const getPitchClassNumber = (note) => {
+  const midi = Note.midi(note);
+  return midi !== undefined ? midi % 12 : null;
+};
+
 export const normalizeNote = (note, root) => {
-  const baseNote = Note.pitchClass(note); // Gets note without octave
+  const baseNote = Note.pitchClass(note);
   if (!root) return baseNote;
 
-  // Get preferred accidental type based on root (e.g., Bb root → prefer flats)
   const rootAccidental = root.includes("b") ? "b" : root.includes("#") ? "#" : "";
-
   const equivalent = Note.enharmonic(baseNote);
-  const [rootLetter] = root.split(/[b#]/);
 
-  // Prefer the version that matches the root's accidental
-  if (rootAccidental === "b" && baseNote.includes("#")) {
-    return equivalent;
-  }
-  if (rootAccidental === "#" && baseNote.includes("b")) {
-    return equivalent;
-  }
+  // Prefer the accidental type matching the root
+  if (rootAccidental === "b" && baseNote.includes("#")) return equivalent;
+  if (rootAccidental === "#" && baseNote.includes("b")) return equivalent;
 
   return baseNote;
 };
 
 export const getTonalSafeName = (note) => Note.pitchClass(note);
+export { getPitchClassNumber }; // Add this export

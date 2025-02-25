@@ -1,63 +1,27 @@
 import React, { useState } from "react";
-import { cycleIndex } from "../utils/cycleIndex";
+import StepperSelect from "./StepperSelect";
 
 const ChordBankSelector = ({ chords = [], onChange }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  if (!chords || chords.length === 0) {
+  if (!chords?.length) {
     console.warn("No chords provided to ChordBankSelector");
     return null;
   }
 
-  const handleSelectChange = (index) => {
+  const handleChange = (selectedChord, index) => {
     setSelectedIndex(index);
-    onChange(chords[index].number);
-  };
-
-  const handleIncrement = () => {
-    const newIndex = cycleIndex(selectedIndex, chords.length, 1);
-    handleSelectChange(newIndex);
-  };
-
-  const handleDecrement = () => {
-    const newIndex = cycleIndex(selectedIndex, chords.length, -1);
-    handleSelectChange(newIndex);
+    onChange(selectedChord.number);
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 text-main  w-fit">
-      <button
-        className="relative flex items-center justify-center rounded-lg px-4 py-1 shadow-sm focus:outline-caret appearance-none bg-caret cursor-pointer h-10 w-10"
-        onClick={handleDecrement}
-      >
-        <div className="h-[3px] rounded-full w-3 bg-bg"></div>
-      </button>
-      <div className="relative inline-block w-full">
-        <select
-          value={selectedIndex}
-          onChange={(e) => handleSelectChange(parseInt(e.target.value))}
-          className="bg-bg outline outline-2 outline-main custom-scrollbar rounded-lg pl-3 py-2 shadow-sm focus:outline-text appearance-none text-text cursor-pointer"
-        >
-          {chords.map((chart, index) => (
-            <option
-              key={chart.number}
-              value={index}
-            >
-              {chart.number}: {chart.genre}
-            </option>
-          ))}
-        </select>
-
-        <div className="absolute top-1/2 right-3 transform -translate-y-1/2 w-0 h-0 border-l-8 border-r-8 border-b-0 border-t-8 border-transparent border-t-text"></div>
-      </div>
-      <button
-        className="relative flex items-center justify-center rounded-lg px-4 py-1 shadow-sm focus:outline-caret appearance-none bg-caret cursor-pointer h-10 w-10"
-        onClick={handleIncrement}
-      >
-        <div className="absolute h-[3px] rounded-full w-3 bg-bg"></div>
-        <div className="absolute h-3 rounded-full w-[3px] bg-bg"></div>
-      </button>
-    </div>
+    <StepperSelect
+      items={chords}
+      selectedIndex={selectedIndex}
+      onChange={handleChange}
+      valueKey="number"
+      renderOption={(chord) => `${chord.number}: ${chord.genre}`}
+    />
   );
 };
 

@@ -1,0 +1,15 @@
+[data-theme="3"][data-color-mode="light"] {
+  --text: #272602;
+  --background: #fefdec;
+  --primary: #7f7d06;
+  --secondary: #8cf85d;
+  --accent: #0ee50b;
+}
+
+[data-theme="3"][data-color-mode="dark"] {
+  --text: #fdfcda;
+  --background: #151401;
+  --primary: #f9f781;
+  --secondary: #349f07;
+  --accent: #1cf418;
+}

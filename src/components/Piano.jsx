@@ -36,9 +36,9 @@ const Piano = ({ notes = [], root }) => {
         return (
           <div
             key={i}
-            className={`w-4 h-12 border-1 outline outline-2 outline-main border-main rounded-sm rounded-t-none first:rounded-tl-sm
+            className={`w-4 h-12 border-1 outline outline-2 outline-background-50 border-background-50 rounded-sm rounded-t-none first:rounded-tl-sm
               ${i === whiteNotes.length - 1 ? "rounded-tr-sm" : ""} 
-              ${normalized === processedRoot ? "bg-text" : processedNotes.includes(normalized) ? "bg-text" : "bg-sub-alt"}`}
+              ${normalized === processedRoot ? "bg-primary-500" : processedNotes.includes(normalized) ? "bg-accent-500" : "bg-background-100"}`}
           />
         );
       })}
@@ -48,8 +48,8 @@ const Piano = ({ notes = [], root }) => {
         return (
           <div
             key={i}
-            className={`absolute h-7 w-3.5 border-[2px] border-t-0 border-main rounded-sm rounded-t-none
-              ${normalized === processedRoot ? "bg-text" : processedNotes.includes(normalized) ? "bg-text" : "bg-sub-alt"}`}
+            className={`absolute h-7 w-3.5 border-[2px] border-t-0 border-primary-50 rounded-sm rounded-t-none
+              ${normalized === processedRoot ? "bg-accent-500" : processedNotes.includes(normalized) ? "bg-secondary-500" : "bg-background-200"}`}
             style={{ left: `${position}px` }}
           />
         );

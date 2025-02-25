@@ -9,26 +9,60 @@ export const useTheme = () => {
 };
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "horizon");
+  const [themeName, setThemeName] = useState(localStorage.getItem("themeName") || "1");
+  const [colorMode, setColorMode] = useState(() => {
+    const savedMode = localStorage.getItem("colorMode");
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (!savedMode) {
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      return systemDark ? "dark" : "light";
+    }
+    return savedMode || (systemDark ? "dark" : "light");
+  });
   const [themeStyles, setThemeStyles] = useState({});
 
-  // Load all theme CSS files during initialization
+  // Load all theme CSS files
   useEffect(() => {
     const importThemes = async () => {
-      const themeModules = import.meta.glob("./themes/*.css", { as: "raw", eager: true });
-      const themes = Object.entries(themeModules).reduce((acc, [path, css]) => {
-        const themeName = path.match(/\.\/themes\/(.*)\.css/)[1];
-        acc[themeName] = css;
-        return acc;
-      }, {});
-      setThemeStyles(themes);
+      try {
+        const themeModules = import.meta.glob("../themes/*.css", {
+          as: "raw",
+          eager: true,
+        });
+
+        // Debug: Log found theme files
+        console.log("Theme files found:", Object.keys(themeModules));
+
+        const themes = Object.entries(themeModules).reduce((acc, [path, css]) => {
+          const themeName = path.match(/\/themes\/(.*)\.css/)[1];
+          acc[themeName] = css;
+          return acc;
+        }, {});
+
+        setThemeStyles(themes);
+      } catch (error) {
+        console.error("Error loading themes:", error);
+      }
     };
     importThemes();
   }, []);
 
-  // Apply theme when it changes
   useEffect(() => {
-    if (!themeStyles[theme]) return;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handleSystemChange = (e) => {
+      if (!localStorage.getItem("colorMode")) {
+        setColorMode(e.matches ? "dark" : "light");
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleSystemChange);
+    return () => mediaQuery.removeEventListener("change", handleSystemChange);
+  }, []);
+
+  // Apply theme and mode
+  useEffect(() => {
+    if (!themeStyles[themeName]) return;
 
     let styleElement = document.getElementById("theme-style");
     if (!styleElement) {
@@ -36,19 +70,34 @@ const ThemeProvider = ({ children }) => {
       styleElement.id = "theme-style";
       document.head.appendChild(styleElement);
     }
-    styleElement.textContent = themeStyles[theme];
 
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme, themeStyles]);
+    document.documentElement.removeAttribute("style");
+
+    styleElement.textContent = themeStyles[themeName];
+
+    document.documentElement.setAttribute("data-theme", themeName);
+    document.documentElement.setAttribute("data-color-mode", colorMode);
+
+    document.documentElement.offsetHeight;
+
+    localStorage.setItem("themeName", themeName);
+    localStorage.setItem("colorMode", colorMode);
+  }, [themeName, colorMode, themeStyles]);
 
   const switchTheme = (newTheme) => {
     if (themeStyles[newTheme]) {
-      setTheme(newTheme);
+      setThemeName(newTheme);
+    } else {
+      console.warn(`Theme ${newTheme} not found, resetting to default`);
+      setThemeName("1");
     }
   };
 
-  return <ThemeContext.Provider value={{ theme, switchTheme }}>{children}</ThemeContext.Provider>;
+  const toggleColorMode = () => {
+    setColorMode((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  return <ThemeContext.Provider value={{ themeName, colorMode, switchTheme, toggleColorMode }}>{children}</ThemeContext.Provider>;
 };
 
 export default ThemeProvider;

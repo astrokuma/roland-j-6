@@ -1,4 +1,7 @@
-export const themeOptions = [
+export const themes = [
+  { value: "1", label: "1 Theme" },
+  { value: "2", label: "2 Theme" },
+  { value: "3", label: "3 Theme" },
   { value: "8008", label: "8008 Theme" },
   { value: "80s_after_dark", label: "80S After Dark Theme" },
   { value: "9009", label: "9009 Theme" },

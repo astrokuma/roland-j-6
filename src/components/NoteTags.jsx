@@ -1,24 +1,10 @@
 import React from "react";
 import { Note } from "@tonaljs/tonal";
+import { normalizeNote } from "../utils/notes";
 
 const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay, missingNotes = [] }) => {
   const normalize = (note, rootNote) => {
-    if (!note) return "";
-    const cleaned = note.replace(/[0-9]/g, "");
-
-    if (rootNote) {
-      const rootAccidental = rootNote.includes("b") ? "b" : rootNote.includes("#") ? "#" : "";
-      const equivalent = Note.enharmonic(cleaned);
-
-      if (rootAccidental === "b" && cleaned.includes("#")) {
-        return equivalent;
-      }
-      if (rootAccidental === "#" && cleaned.includes("b")) {
-        return equivalent;
-      }
-    }
-
-    return Note.simplify(cleaned) || cleaned;
+    return normalizeNote(note, rootNote);
   };
 
   const safeNotes = Array.isArray(notes) ? notes.filter(Boolean) : [];
@@ -33,27 +19,22 @@ const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay, missingNotes
       {uniqueAllNotes.map((note, index) => {
         const displayNote = normalize(note, root);
         const isRoot = displayNote === normalizedRoot;
-        const isAccidental = displayNote.includes("#") || displayNote.includes("b");
         const isMatched = matchedNotes?.includes(note);
         const isMissing = safeMissingNotes.includes(note);
 
         let bgColor;
 
         if (isMissing) {
-          bgColor = "opacity-50 bg-none border-2 border-main text-main";
+          bgColor = "bg-none text-secondary-500 outline-background-500";
         } else {
           if (isScaleDisplay) {
-            bgColor = "bg-none border-2 border-text text-text";
-            if (isRoot) bgColor = "bg-text";
-            if (isMatched) bgColor = "bg-main text-bg";
+            bgColor = "outline outline-2 text-accent-500";
+            if (isMatched) bgColor = "bg-accent-500 text-background-500";
+            if (isRoot) bgColor = "bg-primary-500 text-background-500";
           } else {
-            // Chord display logic with default background
-            bgColor = "bg-text text-bg"; // Restore default chord color
+            bgColor = "bg-accent-500 text-background-500";
             if (isRoot) {
-              bgColor = "bg-main text-bg";
-            }
-            if (isAccidental && !isRoot) {
-              bgColor = "bg-text text-bg";
+              bgColor = "bg-primary-500 text-background-500";
             }
           }
         }
@@ -61,7 +42,7 @@ const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay, missingNotes
         return (
           <span
             key={index}
-            className={`flex justify-center outline outline-2 outline-sub-alt items-center font-bold rounded-full w-8 h-8 text-sm ${bgColor}`}
+            className={`flex justify-center items-center font-bold rounded-full w-8 h-8 text-sm ${bgColor}`}
           >
             {displayNote}
           </span>

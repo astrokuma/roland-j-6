@@ -9,15 +9,15 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--sub-alt-color); /* Track color */
+    background: var(--background); /* Track color */
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: var(--bg-color); /* Thumb color */
+    background-color: var(--accent); /* Thumb color */
     border-radius: 10px; /* Roundness of the thumb */
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: var(--main-color); /* Thumb color on hover */
+    background-color: var(--secondary); /* Thumb color on hover */
   }
 }
