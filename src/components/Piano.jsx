@@ -15,30 +15,30 @@ const Piano = ({ notes = [], root, selected }) => {
 
   const getBlackKeyPosition = (note) => {
     const positions = {
-      "C#": 13,
-      Db: 13,
-      "D#": 29,
-      Eb: 29,
-      "F#": 61,
-      Gb: 61,
-      "G#": 77,
-      Ab: 77,
-      "A#": 93,
-      Bb: 93,
+      "C#": 10.5,
+      Db: 10.5,
+      "D#": 27,
+      Eb: 27,
+      "F#": 58.5,
+      Gb: 58.5,
+      "G#": 74.5,
+      Ab: 74.5,
+      "A#": 90.5,
+      Bb: 90.5,
     };
     return positions[note] || 0;
   };
 
   return (
-    <div className="flex relative p-1 my-4 scale-[1.4] sm:scale-150 md:scale-[1.8]">
+    <div className="flex relative p-[1.5px] rounded-[3px] p-.5 my-4 scale-[1.4] sm:scale-150 md:scale-[1.8]">
       {whiteNotes.map((note, i) => {
         const normalized = normalizeNote(note, root);
         return (
           <div
             key={i}
-            className={`w-4 h-12 border-1 outline outline-2 ${selected ? "outline-primary-100 border-primary-200 bg-primary-50" : "outline-primary-50 border-primary-50"} rounded-sm rounded-t-none first:rounded-tl-sm
-  ${i === whiteNotes.length - 1 ? "rounded-tr-sm " : ""} 
-  ${normalized === processedRoot ? "bg-secondary-300" : processedNotes.includes(normalized) ? "bg-accent-300" : "bg-primary-100"}`}
+            className={`w-4 h-12 border rounded-sm ${selected ? "border-primary" : "border-primary"} 
+            ${i === whiteNotes.length - 1 ? "rounded-tr-sm " : ""}
+            ${normalized === processedRoot ? "bg-tertiary" : processedNotes.includes(normalized) ? "bg-accent" : "bg-secondary opacity-50"}`}
           />
         );
       })}
@@ -48,8 +48,8 @@ const Piano = ({ notes = [], root, selected }) => {
         return (
           <div
             key={i}
-            className={`absolute h-7 w-3.5 border-[2px] border-t-0 ${selected ? "border-primary-100 bg-primary-50" : "border-primary-50"} rounded-sm rounded-t-none
-  ${normalized === processedRoot ? "bg-accent-300" : processedNotes.includes(normalized) ? "bg-secondary-300" : "bg-primary-100"}`}
+            className={`absolute h-7 w-3.5 border-[1.5px] border-t-[1px] rounded-sm rounded-t-none ${selected ? "border-primary" : "border-primary"} 
+            ${normalized === processedRoot ? "bg-accent" : processedNotes.includes(normalized) ? "bg-accent" : "bg-secondary"}`}
             style={{ left: `${position}px` }}
           />
         );

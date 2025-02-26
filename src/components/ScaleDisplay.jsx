@@ -9,9 +9,9 @@ const ScaleButton = ({ scaleName, notes, root, matchedNotes, matchPercentage }) 
   const missingNotes = normalizedMatchedNotes.filter((n) => !normalizedScaleNotes.includes(n));
 
   return (
-    <li className="flex">
-      <div className="w-full border-4 border-accent-500 rounded-lg">
-        <div className="w-full text-center bg-accent-500 rounded-t-sm font-bold py-2 px-4">
+    <li className="flex bg-primary rounded-lg">
+      <div className="w-full text-accent">
+        <div className="w-full border-b-4 border-accent text-center font-bold py-2 px-4">
           {scaleName} ({typeof matchPercentage === "number" ? `${Math.round(matchPercentage)}% match` : "N/A"})
         </div>
 

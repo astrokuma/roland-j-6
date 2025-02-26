@@ -9,16 +9,16 @@ const KeyboardDisplay = ({ selectedButtons, selectionOrder, bankId }) => {
 
     return (
       <div
-        className={`flex items-center justify-center ${isTop ? "h-7" : "h-8"} w-6 rounded-sm 
-        ${isSelected ? (isTop ? "bg-primary-500" : "bg-secondary-500") : "bg-secondary-50"}`}
+        className={`flex items-center outline outline-accent justify-center ${isTop ? "h-7 outline-secondary" : "h-8"} w-6 rounded-sm 
+        ${isSelected ? (isTop ? "bg-secondary" : "bg-accent") : "bg-primary"}`}
       >
-        {selectionNumber && <p className="text-secondary-50 text-sm font-bold">{selectionNumber}</p>}
+        {selectionNumber && <p className="text-primary text-sm font-bold">{selectionNumber}</p>}
       </div>
     );
   };
 
   return (
-    <div className="col-span-8 flex flex-col items-center justify-center gap-2 bg-secondary-200 h-28 px-6 rounded-lg">
+    <div className="col-span-8 flex flex-col items-center justify-center gap-2 bg-primary h-28 px-6 rounded-lg">
       <div className="grid grid-flow-col mx-4 gap-2.5">
         {["2", "4", "7", "9", "11"].map((num) => (
           <KeyButton

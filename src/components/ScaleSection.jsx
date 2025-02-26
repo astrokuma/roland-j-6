@@ -62,8 +62,8 @@ const ScaleBox = ({ selectedChords = [] }) => {
       {scales.length > 0 ? (
         <>
           <div className="flex mt-4">
-            <div className="border-4 pr-2 border-accent-500 rounded-lg break-words flex items-center gap-2">
-              <span className="bg-accent-500 text-primary-50 font-semibold py-4 px-4">Notes in chords:</span>
+            <div className="bg-primary p-4 rounded-lg break-words flex items-center gap-4">
+              <span className="text-accent font-semibold">Notes in chords:</span>
               <NoteTags
                 notes={uniqueNotesArray}
                 root={root}

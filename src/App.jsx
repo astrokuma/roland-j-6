@@ -32,7 +32,7 @@ const App = () => {
   return (
     <div className="min-h-dvh flex flex-col gap-4">
       <div className="w-full flex-1 flex-col gap-4 mx-auto">
-        <div className="px-[2%] sticky bg-primary-50 -top-[12.2rem] sm:-top-[12.7rem] md:-top-[8.7rem] z-50 mx-auto w-full grid grid-cols-12 gap-2 font-medium py-2 sm:pt-4">
+        <div className="px-2 sticky bg-background -top-[12.2rem] sm:-top-[12.7rem] md:-top-[8.7rem] z-50 mx-auto w-full grid grid-cols-12 gap-2 font-medium py-2 sm:pt-4">
           <Header />
           <ControlPanel
             chordBanks={chordChartWithNumbers}

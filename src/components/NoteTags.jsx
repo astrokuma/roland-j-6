@@ -25,16 +25,16 @@ const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay, missingNotes
         let bgColor;
 
         if (isMissing) {
-          bgColor = "bg-none text-secondary-500 outline-primary-50";
+          bgColor = "bg-none text-secondary";
         } else {
           if (isScaleDisplay) {
-            bgColor = "outline outline-2 text-accent-500";
-            if (isMatched) bgColor = "bg-accent-500 text-primary-50";
-            if (isRoot) bgColor = "bg-primary-500 text-primary-50";
+            bgColor = "outline outline-2 text-secondary";
+            if (isMatched) bgColor = "bg-accent text-primary";
+            if (isRoot) bgColor = "bg-tertiary text-primary";
           } else {
-            bgColor = "bg-accent-500 text-primary-50";
+            bgColor = "bg-accent text-primary";
             if (isRoot) {
-              bgColor = "bg-secondary-500 text-primary-50";
+              bgColor = "bg-tertiary text-primary";
             }
           }
         }

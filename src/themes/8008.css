@@ -1,13 +1,16 @@
-:root {
-  --bg-color: #333a45;
-  --main-color: #f44c7f;
-  --caret-color: #f44c7f;
-  --sub-color: #939eae;
-  --sub-alt-color: #000000;
-  --sub-alt-color: #2e343d;
-  --text-color: #e9ecf0;
-  --error-color: #da3333;
-  --error-extra-color: #791717;
-  --colorful-error-color: #c5da33;
-  --colorful-error-extra-color: #849224;
+[data-theme="8008"][data-color-mode="light"] {
+  --primary: #004643;
+  --secondary: #568c84;
+  --tertiary: #e16162;
+  --accent: #f9bc60;
+  --foreground: #333a45;
+  --background: #fffffe;
+}
+[data-theme="8008"][data-color-mode="dark"] {
+  --primary: #004643;
+  --secondary: #568c84;
+  --tertiary: #e16162;
+  --accent: #f9bc60;
+  --foreground: #fffffe;
+  --background: #333a45;
 }
