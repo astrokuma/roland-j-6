@@ -6,7 +6,7 @@ const ColorModeToggle = () => {
   return (
     <button
       onClick={toggleColorMode}
-      className="px-8 py-1  rounded-full bg-background-100 text-secondary-500 inline-flex items-center gap-2"
+      className="px-8 py-1  rounded-full bg-primary-50 text-accent-500 inline-flex items-center gap-2"
     >
       {colorMode === "light" ? (
         <>
