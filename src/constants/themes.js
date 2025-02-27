@@ -4,4 +4,5 @@ export const themes = [
   { value: "water", label: "Water" },
   { value: "gray", label: "Gray" },
   { value: "fire", label: "Fire" },
+  { value: "amethyst", label: "Amethyst" },
 ];
