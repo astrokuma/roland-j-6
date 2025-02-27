@@ -49,7 +49,7 @@ const Piano = ({ notes = [], root, selected }) => {
           <div
             key={i}
             className={`absolute h-7 w-3.5 border-[1.5px] border-t-[1px] rounded-sm rounded-t-none ${selected ? "border-primary" : "border-primary"} 
-            ${normalized === processedRoot ? "bg-accent" : processedNotes.includes(normalized) ? "bg-accent" : "bg-notes"}`}
+            ${normalized === processedRoot ? "bg-tertiary" : processedNotes.includes(normalized) ? "bg-accent" : "bg-notes"}`}
             style={{ left: `${position}px` }}
           />
         );

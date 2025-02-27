@@ -27,7 +27,7 @@ const StepperSelect = ({ items = [], valueKey = "value", labelKey = "label", sel
         <select
           value={selectedIndex}
           onChange={(e) => handleIndexChange(parseInt(e.target.value))}
-          className="bg-accent custom-scrollbar rounded-full min-w-52 sm:min-w-60 py-2 shadow-sm appearance-none text-center text-primary cursor-pointer"
+          className="bg-accent custom-scrollbar rounded-full min-w-52 sm:min-w-60 py-2 shadow-sm appearance-none text-center text-notes cursor-pointer"
         >
           {items.map((item, index) => (
             <option
@@ -54,11 +54,11 @@ const StepperButton = ({ direction, onClick }) => (
     onClick={onClick}
   >
     {direction === "prev" ? (
-      <div className="h-[3px] w-3 bg-primary"></div>
+      <div className="h-[3px] w-3 bg-notes"></div>
     ) : (
       <>
-        <div className="absolute h-[3px] w-3 bg-primary"></div>
-        <div className="absolute h-3 w-[3px] bg-primary"></div>
+        <div className="absolute h-[3px] w-3 bg-notes"></div>
+        <div className="absolute h-3 w-[3px] bg-notes"></div>
       </>
     )}
   </button>

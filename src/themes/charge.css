@@ -1,0 +1,16 @@
+[data-theme="charge"][data-color-mode="light"] {
+  --primary: #fafafa;
+  --notes: #ececec;
+  --secondary: #f5f5f5;
+  --tertiary: #b8ddce;
+  --accent: #9cb1a9;
+  --background: #ffffff;
+}
+[data-theme="charge"][data-color-mode="dark"] {
+  --primary: #020202;
+  --notes: #0f0f0f;
+  --secondary: #161616;
+  --tertiary: #315e4d;
+  --accent: #34443e;
+  --background: #000;
+}

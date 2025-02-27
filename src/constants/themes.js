@@ -5,4 +5,5 @@ export const themes = [
   { value: "slate", label: "Slate" },
   { value: "fire", label: "Fire" },
   { value: "amethyst", label: "Amethyst" },
+  { value: "charge", label: "Charge" },
 ];
