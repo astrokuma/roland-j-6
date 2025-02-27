@@ -2,7 +2,7 @@ export const themes = [
   { value: "emerald", label: "Emerald" },
   { value: "cavern", label: "Cavern" },
   { value: "water", label: "Water" },
-  { value: "gray", label: "Gray" },
+  { value: "slate", label: "Slate" },
   { value: "fire", label: "Fire" },
   { value: "amethyst", label: "Amethyst" },
 ];
