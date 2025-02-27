@@ -1,0 +1,16 @@
+[data-theme="emerald"][data-color-mode="light"] {
+  --primary: #215249;
+  --notes: #307064;
+  --secondary: #3c9181;
+  --tertiary: #ffd904;
+  --accent: #e8aa4e;
+  --background: #fffbe7;
+}
+[data-theme="emerald"][data-color-mode="dark"] {
+  --primary: #12352f;
+  --notes: #214e46;
+  --secondary: #2d685e;
+  --tertiary: #ffd904;
+  --accent: #e8aa4e;
+  --background: #191500;
+}

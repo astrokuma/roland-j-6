@@ -27,7 +27,7 @@ const StepperSelect = ({ items = [], valueKey = "value", labelKey = "label", sel
         <select
           value={selectedIndex}
           onChange={(e) => handleIndexChange(parseInt(e.target.value))}
-          className="bg-accent custom-scrollbar rounded-full pl-6  py-2 shadow-sm appearance-none text-primary cursor-pointer"
+          className="bg-accent custom-scrollbar rounded-full min-w-52 sm:min-w-60 py-2 shadow-sm appearance-none text-center text-primary cursor-pointer"
         >
           {items.map((item, index) => (
             <option

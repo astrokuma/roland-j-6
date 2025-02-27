@@ -1,0 +1,16 @@
+[data-theme="cavern"][data-color-mode="light"] {
+  --primary: #4e5663;
+  --notes: #616b7a;
+  --secondary: #748294;
+  --tertiary: #f4a366;
+  --accent: #d2deca;
+  --background: #fff0e7;
+}
+[data-theme="cavern"][data-color-mode="dark"] {
+  --primary: #2e333a;
+  --notes: #424952;
+  --secondary: #575f6b;
+  --tertiary: #f4a366;
+  --accent: #d2deca;
+  --background: #190a00;
+}

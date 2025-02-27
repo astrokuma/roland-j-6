@@ -1,0 +1,16 @@
+[data-theme="water"][data-color-mode="light"] {
+  --primary: #30465a;
+  --notes: #486682;
+  --secondary: #608bb2;
+  --tertiary: #b6ddd9;
+  --accent: #9ab3cb;
+  --background: #e4ebf1;
+}
+[data-theme="water"][data-color-mode="dark"] {
+  --primary: #1c2833;
+  --notes: #36495b;
+  --secondary: #4c6d8a;
+  --tertiary: #b6ddd9;
+  --accent: #9ab3cb;
+  --background: #10151a;
+}

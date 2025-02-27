@@ -1,9 +1,9 @@
 [data-theme="80s_after_dark"][data-color-mode="light"] {
-  --primary: #ffd1e7;
-  --secondary: #fffb85;
-  --tertiary: #e1e7ec;
-  --accent: #57889e;
-  --background: #f0fbff;
+  --primary: #fff;
+  --secondary: #000;
+  --tertiary: yellowgreen;
+  --accent: red;
+  --background: #fff;
 }
 [data-theme="80s_after_dark"][data-color-mode="dark"] {
   --primary: #7c5669;

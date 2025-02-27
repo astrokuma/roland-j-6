@@ -9,7 +9,7 @@ export const useTheme = () => {
 };
 
 const ThemeProvider = ({ children }) => {
-  const [themeName, setThemeName] = useState(localStorage.getItem("themeName") || "1");
+  const [themeName, setThemeName] = useState(localStorage.getItem("themeName") || "emerald");
   const [colorMode, setColorMode] = useState(() => {
     const savedMode = localStorage.getItem("colorMode");
     const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -89,7 +89,7 @@ const ThemeProvider = ({ children }) => {
       setThemeName(newTheme);
     } else {
       console.warn(`Theme ${newTheme} not found, resetting to default`);
-      setThemeName("1");
+      setThemeName("Emerald");
     }
   };
 
