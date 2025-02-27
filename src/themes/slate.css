@@ -7,9 +7,9 @@
   --background: #ffffff;
 }
 [data-theme="slate"][data-color-mode="dark"] {
-  --primary: #2c2c2c;
-  --notes: #4e4e4e;
-  --secondary: #8c8c8c;
+  --primary: #222222;
+  --notes: #343434;
+  --secondary: #949494;
   --tertiary: #b4b4b4;
   --accent: #7b7b7b;
   --background: #121212;

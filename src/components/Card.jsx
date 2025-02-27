@@ -6,7 +6,7 @@ import { getSelectionNumber } from "../utils/selectionUtils";
 const Card = ({ chord, onClick, selected, selectionOrder, uniqueId }) => {
   return (
     <button
-      className={`m-1 group rounded-lg ${selected ? "bg-primary" : "bg-primary "} cursor-pointer`}
+      className={`group rounded-lg ${selected ? "bg-primary" : "bg-primary "} cursor-pointer`}
       onClick={onClick}
     >
       <div className={`relative flex items-center justify-between text-center py-4 rounded-t-lg border-b-4 border-background ${selected ? "bg-accent" : "bg-notes"}`}>

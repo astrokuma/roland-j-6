@@ -11,7 +11,7 @@ const ScaleButton = ({ scaleName, notes, root, matchedNotes, matchPercentage }) 
   return (
     <li className="flex bg-primary rounded-lg">
       <div className="w-full text-accent">
-        <div className="w-full border-b-4 bg-notes rounded-t-lg border-background text-center font-bold py-2 px-4">
+        <div className="border-b-4 bg-notes rounded-t-lg border-background text-center font-bold py-2 px-4">
           {scaleName} ({typeof matchPercentage === "number" ? `${Math.round(matchPercentage)}% match` : "N/A"})
         </div>
 

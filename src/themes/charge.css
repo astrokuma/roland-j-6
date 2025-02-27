@@ -1,16 +1,16 @@
 [data-theme="charge"][data-color-mode="light"] {
-  --primary: #fafafa;
-  --notes: #ececec;
-  --secondary: #c9c9c9;
+  --primary: #edf4f1;
+  --notes: #fafafa;
+  --secondary: #d2d2d2;
   --tertiary: #d7d49e;
   --accent: #93b4a7;
   --background: #ffffff;
 }
 [data-theme="charge"][data-color-mode="dark"] {
-  --primary: #020202;
-  --notes: #0f0f0f;
-  --secondary: #303030;
-  --tertiary: #315e4d;
-  --accent: #34443e;
+  --primary: #070e0b;
+  --notes: #070707;
+  --secondary: #363636;
+  --tertiary: #615a32;
+  --accent: #364942;
   --background: #000;
 }

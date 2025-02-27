@@ -10,7 +10,7 @@ const CardDisplay = ({ chords, selectedNotes, handleChordToggle, selectionOrder,
   };
 
   return (
-    <div className="w-full mt-4 max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
+    <div className="w-full mt-4 px-2 max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4">
       {chords.map((chord) => {
         const uniqueId = `${bankId}-${chord.button}`;
         const isSelected = selectedNotes.some((notes) => notes.uniqueId === uniqueId);

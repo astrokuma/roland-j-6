@@ -58,7 +58,7 @@ const ScaleBox = ({ selectedChords = [] }) => {
   let uniqueNotesArray = Array.isArray(allNotes) ? [...new Set(allNotes)] : [];
 
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col gap-4">
+    <div className="w-full 2xl:max-w-[85%] px-2 mx-auto flex flex-col gap-4">
       {scales.length > 0 ? (
         <>
           <div className="flex mt-4">
@@ -73,7 +73,7 @@ const ScaleBox = ({ selectedChords = [] }) => {
               />
             </div>
           </div>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4 w-full">
             {scales.map((scale, i) => (
               <ScaleDisplay
                 key={i}
