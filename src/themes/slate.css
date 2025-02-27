@@ -1,4 +1,4 @@
-[data-theme="gray"][data-color-mode="light"] {
+[data-theme="slate"][data-color-mode="light"] {
   --primary: #5d5d5d;
   --notes: #818181;
   --secondary: #b3b4b4;
@@ -6,7 +6,7 @@
   --accent: #dad9d9;
   --background: #ffffff;
 }
-[data-theme="gray"][data-color-mode="dark"] {
+[data-theme="slate"][data-color-mode="dark"] {
   --primary: #333333;
   --notes: #5c5c5c;
   --secondary: #8a8a8a;
