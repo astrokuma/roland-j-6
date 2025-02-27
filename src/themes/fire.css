@@ -7,10 +7,10 @@
   --background: #ffe7bb;
 }
 [data-theme="fire"][data-color-mode="dark"] {
-  --primary: #004643;
-  --secondary: #568c84;
-  --tertiary: #e16162;
-  --accent: #f9bc60;
-  --foreground: #fffffe;
-  --background: #333a45;
+  --primary: #6d131c;
+  --secondary: #8e3223;
+  --tertiary: #b34f26;
+  --accent: #ffffff;
+  --foreground: #fec23a;
+  --background: #1d150b;
 }

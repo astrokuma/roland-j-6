@@ -1,0 +1,16 @@
+[data-theme="amethyst"][data-color-mode="light"] {
+  --primary: #46215d;
+  --notes: #622c80;
+  --secondary: #7d4b9e;
+  --tertiary: #eed4ff;
+  --accent: #c39fca;
+  --background: #f2e4f0;
+}
+[data-theme="amethyst"][data-color-mode="dark"] {
+  --primary: #261232;
+  --notes: #46215c;
+  --secondary: #682f8a;
+  --tertiary: #eed4ff;
+  --accent: #c39fca;
+  --background: #0f0019;
+}
