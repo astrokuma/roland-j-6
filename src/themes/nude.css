@@ -1,0 +1,16 @@
+[data-theme="nude"][data-color-mode="light"] {
+  --primary: #f5e5d1;
+  --notes: #fff5e9;
+  --secondary: #dec097;
+  --tertiary: #d5a189;
+  --accent: #d4b7a0;
+  --background: #e8d4b8;
+}
+[data-theme="nude"][data-color-mode="dark"] {
+  --primary: #422c1d;
+  --notes: #2e1e12;
+  --secondary: #26190f;
+  --tertiary: #bb873e;
+  --accent: #967549;
+  --background: #211312;
+}

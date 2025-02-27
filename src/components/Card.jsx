@@ -9,7 +9,7 @@ const Card = ({ chord, onClick, selected, selectionOrder, uniqueId }) => {
       className={`m-1 group rounded-lg ${selected ? "bg-primary" : "bg-primary "} cursor-pointer`}
       onClick={onClick}
     >
-      <div className={`relative flex items-center justify-between text-center py-4 rounded-t-lg border-b-4 border-background ${selected ? "bg-accent" : "bg-secondary"}`}>
+      <div className={`relative flex items-center justify-between text-center py-4 rounded-t-lg border-b-4 border-background ${selected ? "bg-accent" : "bg-notes"}`}>
         <p
           className={`absolute left-2 scale-75 sm:scale-100 w-8 h-8 flex items-center justify-center 
           font-extrabold rounded-full text-accent ${selected ? "bg-primary" : "invisible"}`}

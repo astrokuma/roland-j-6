@@ -1,9 +1,10 @@
 export const themes = [
-  { value: "emerald", label: "Emerald" },
-  { value: "cavern", label: "Cavern" },
-  { value: "water", label: "Water" },
-  { value: "slate", label: "Slate" },
-  { value: "fire", label: "Fire" },
   { value: "amethyst", label: "Amethyst" },
+  { value: "cavern", label: "Cavern" },
   { value: "charge", label: "Charge" },
+  { value: "emerald", label: "Emerald" },
+  { value: "fire", label: "Fire" },
+  { value: "nude", label: "Nude" },
+  { value: "slate", label: "Slate" },
+  { value: "water", label: "Water" },
 ];

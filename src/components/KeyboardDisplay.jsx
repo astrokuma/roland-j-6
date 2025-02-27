@@ -9,7 +9,7 @@ const KeyboardDisplay = ({ selectedButtons, selectionOrder, bankId }) => {
 
     return (
       <div
-        className={`flex items-center outline outline-accent justify-center ${isTop ? "h-7 outline-secondary" : "h-8"} w-6 rounded-sm 
+        className={`flex items-center outline justify-center ${isTop ? "h-7 outline-secondary" : "h-8 outline-accent"} w-6 rounded-sm 
         ${isSelected ? (isTop ? "bg-secondary" : "bg-accent") : "bg-primary"}`}
       >
         {selectionNumber && <p className="text-primary text-sm font-bold">{selectionNumber}</p>}
