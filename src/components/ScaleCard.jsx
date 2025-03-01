@@ -43,7 +43,7 @@ const ScaleCard = ({ scaleName, notes = [], root, matchedNotes = [], matchPercen
             {missingNotes.length > 0 && (
               <div className="flex items-center text-secondary font-semibold mb-4">
                 Non-scale notes:
-                <span className="ml-2">{missingNotes.join(", ")}</span>
+                <span className="ml-2">{[...new Set(missingNotes)].join(", ")}</span>
               </div>
             )}
           </div>
