@@ -1,28 +1,52 @@
 import React from "react";
-import { Note } from "@tonaljs/tonal";
+import Piano from "./Piano";
 import NoteTags from "./NoteTags";
-import { normalizeNote } from "../utils/notes";
+import { Note } from "@tonaljs/tonal";
+import { normalizeNote } from "../utils/notes"; // Added import
 
-const ScaleCard = ({ scaleName, notes, root, matchedNotes, matchPercentage }) => {
-  const normalizedMatchedNotes = matchedNotes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root))));
-  const normalizedScaleNotes = notes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root))));
-  const missingNotes = normalizedMatchedNotes.filter((n) => !normalizedScaleNotes.includes(n));
+const ScaleCard = ({ scaleName, notes = [], root, matchedNotes = [], matchPercentage = 0 }) => {
+  // Normalize and simplify scale notes
+  const normalizedScaleNotes = notes.map((note) => Note.simplify(Note.pitchClass(normalizeNote(note, root))));
+
+  // Normalize and simplify matched notes (chord notes)
+  const simplifiedMatchedNotes = matchedNotes.map((note) => Note.simplify(Note.pitchClass(normalizeNote(note, root))));
+
+  // Calculate non-fitted notes (chord notes not in scale)
+  const missingNotes = simplifiedMatchedNotes.filter((n) => !normalizedScaleNotes.includes(n));
+
+  // Check root presence using normalized values
+  const normalizedRoot = root ? Note.simplify(Note.pitchClass(normalizeNote(root, root))) : null;
+  const rootIsPresent = normalizedRoot && simplifiedMatchedNotes.some((n) => n === normalizedRoot || Note.enharmonic(n) === normalizedRoot || Note.enharmonic(normalizedRoot) === n);
 
   return (
-    <li className="flex bg-primary rounded-lg">
-      <div className="w-full text-accent">
-        <div className="border-b-4 bg-notes rounded-t-lg border-background text-center font-bold py-2 px-4">
-          {scaleName} ({typeof matchPercentage === "number" ? `${Math.round(matchPercentage)}% match` : "N/A"})
-        </div>
+    <li className="bg-primary rounded-lg overflow-hidden">
+      <div className="flex flex-col gap-4">
+        <h3 className="flex bg-notes border-b-4 border-background px-8 py-4 justify-between sm:text-base items-start text-center text-tertiary font-bold">
+          {scaleName}
+          <span>{matchPercentage.toFixed(0)}% match</span>
+        </h3>
 
-        <div className="p-4">
+        <div className="flex flex-col justify-center items-center gap-4">
           <NoteTags
             notes={notes}
-            root={root}
+            root={rootIsPresent ? root : null}
             matchedNotes={matchedNotes}
-            missingNotes={missingNotes}
             isScaleDisplay={true}
+            rootIsPresent={rootIsPresent}
           />
+          <Piano
+            notes={notes}
+            root={rootIsPresent ? root : null}
+            selected={true}
+          />
+          <div>
+            {missingNotes.length > 0 && (
+              <div className="flex items-center text-secondary font-semibold mb-4">
+                Non-scale notes:
+                <span className="ml-2">{missingNotes.join(", ")}</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </li>

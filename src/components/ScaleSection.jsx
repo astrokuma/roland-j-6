@@ -15,12 +15,17 @@ const findMatchingScales = (inputNotes, root) => {
   const scaleRoot = root || (inputNotes.length > 0 ? Note.pitchClass(inputNotes[0]) : null);
   if (!scaleRoot) return [];
 
-  // Simplify input notes to enharmonic equivalents
+  // Process notes and check if root is actually in the notes
   const simplifiedInputNotes = inputNotes.map((n) => {
     const pc = Note.pitchClass(n);
     return Note.simplify(pc);
   });
+
   const uniqueNotes = [...new Set(simplifiedInputNotes)];
+
+  // Check if root is in the actual notes
+  const normalizedRoot = Note.simplify(Note.pitchClass(scaleRoot));
+  const rootIsPresent = uniqueNotes.some((n) => n === normalizedRoot || Note.enharmonic(n) === normalizedRoot || normalizedRoot === Note.enharmonic(n));
 
   return SCALE_MODES.flatMap((mode) => {
     try {
@@ -45,6 +50,7 @@ const findMatchingScales = (inputNotes, root) => {
         notes: simplifiedScaleNotes.map((n) => normalizeNote(n, scaleRoot)),
         match: Number.isFinite(match) ? match : 0,
         root: scaleRoot,
+        rootIsPresent: rootIsPresent, // Pass this info to ScaleCard
       };
     } catch {
       return null;
@@ -71,7 +77,7 @@ const ScaleSection = ({ selectedChords = [] }) => {
         <>
           <div className="flex mt-4">
             <div className="bg-primary p-4 rounded-lg break-words flex items-center gap-4">
-              <span className="text-accent font-semibold">Notes in chords:</span>
+              <span className="text-tertiary font-bold">Chord notes:</span>
               <NoteTags
                 notes={uniqueNotesArray}
                 root={root}
@@ -92,6 +98,7 @@ const ScaleSection = ({ selectedChords = [] }) => {
                 matchedCount={scale.matchedCount}
                 totalChordNotes={scale.totalChordNotes}
                 matchPercentage={scale.match}
+                rootIsPresent={scale.rootIsPresent}
               />
             ))}
           </ul>

@@ -3,9 +3,14 @@ import { Note } from "@tonaljs/tonal";
 import { normalizeNote } from "../utils/notes";
 
 const Piano = ({ notes = [], root, selected }) => {
-  // Process the notes and keep track of the root separately
+  // Process the actual notes from the chord
   const processedNotes = [...new Set(notes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root)))))];
+
+  // Check if root is actually present in the notes
   const normalizedRoot = root ? Note.simplify(Note.pitchClass(normalizeNote(root, root))) : null;
+
+  // Check if root is actually present in the notes array (directly or as enharmonic equivalent)
+  const rootIsPresent = normalizedRoot && processedNotes.some((n) => n === normalizedRoot || Note.enharmonic(n) === normalizedRoot || Note.enharmonic(normalizedRoot) === n);
 
   // Get the preferred accidental style from the first note
   const firstNote = notes[0] || "";
@@ -32,9 +37,9 @@ const Piano = ({ notes = [], root, selected }) => {
     return positions[note] || 0;
   };
 
-  // Check if a note matches the root
+  // Check if a note matches the root AND the root is present in the chord
   const isRoot = (note) => {
-    if (!normalizedRoot) return false;
+    if (!normalizedRoot || !rootIsPresent) return false;
 
     const simplifiedNote = Note.simplify(note);
     return simplifiedNote === normalizedRoot || Note.enharmonic(simplifiedNote) === normalizedRoot || Note.enharmonic(normalizedRoot) === simplifiedNote;
@@ -50,7 +55,7 @@ const Piano = ({ notes = [], root, selected }) => {
   };
 
   return (
-    <div className="flex relative p-[1.5px] rounded-[3px] p-.5 my-4 scale-[1.4] sm:scale-150 md:scale-[1.8]">
+    <div className="flex relative p-[1.5px] rounded-[3px] my-4 scale-[1.4] sm:scale-150 md:scale-[1.8]">
       {whiteNotes.map((note, i) => {
         const normalized = normalizeNote(note, root);
         return (
