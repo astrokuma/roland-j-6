@@ -3,13 +3,16 @@ import { Note } from "@tonaljs/tonal";
 import { normalizeNote } from "../utils/notes";
 
 const Piano = ({ notes = [], root, selected }) => {
-  const processedRoot = root ? Note.pitchClass(root) : null;
-  const rootAccidental = processedRoot ? (processedRoot.includes("#") ? "#" : processedRoot.includes("b") ? "b" : "") : "";
+  // Process the notes and keep track of the root separately
+  const processedNotes = [...new Set(notes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root)))))];
+  const normalizedRoot = root ? Note.simplify(Note.pitchClass(normalizeNote(root, root))) : null;
 
-  // Dynamically set blackNotes based on root accidental
-  const blackNotes = rootAccidental === "#" ? ["C#", "D#", "F#", "G#", "A#"] : rootAccidental === "b" ? ["Db", "Eb", "Gb", "Ab", "Bb"] : ["C#", "D#", "F#", "G#", "A#"]; // Default to sharps
+  // Get the preferred accidental style from the first note
+  const firstNote = notes[0] || "";
+  const preferredAccidental = firstNote.includes("b") ? "b" : firstNote.includes("#") ? "#" : root && root.includes("b") ? "b" : root && root.includes("#") ? "#" : "#";
 
-  const processedNotes = [...new Set(notes.map((n) => normalizeNote(n, root)))];
+  // Select black notes display format based on preferred accidental
+  const blackNotes = preferredAccidental === "b" ? ["Db", "Eb", "Gb", "Ab", "Bb"] : ["C#", "D#", "F#", "G#", "A#"];
 
   const whiteNotes = ["C", "D", "E", "F", "G", "A", "B"];
 
@@ -29,6 +32,23 @@ const Piano = ({ notes = [], root, selected }) => {
     return positions[note] || 0;
   };
 
+  // Check if a note matches the root
+  const isRoot = (note) => {
+    if (!normalizedRoot) return false;
+
+    const simplifiedNote = Note.simplify(note);
+    return simplifiedNote === normalizedRoot || Note.enharmonic(simplifiedNote) === normalizedRoot || Note.enharmonic(normalizedRoot) === simplifiedNote;
+  };
+
+  // Check if a note is included in our processed notes array
+  const isNoteIncluded = (note) => {
+    // Get all enharmonic equivalents
+    const basicNote = Note.simplify(note);
+    const enharmonic = Note.enharmonic(basicNote);
+
+    return processedNotes.includes(basicNote) || processedNotes.includes(enharmonic) || processedNotes.some((n) => Note.enharmonic(n) === basicNote);
+  };
+
   return (
     <div className="flex relative p-[1.5px] rounded-[3px] p-.5 my-4 scale-[1.4] sm:scale-150 md:scale-[1.8]">
       {whiteNotes.map((note, i) => {
@@ -38,7 +58,7 @@ const Piano = ({ notes = [], root, selected }) => {
             key={i}
             className={`w-4 h-12 border rounded-sm ${selected ? "border-primary" : "border-primary"} 
             ${i === whiteNotes.length - 1 ? "rounded-tr-sm " : ""}
-            ${normalized === processedRoot ? "bg-tertiary" : processedNotes.includes(normalized) ? "bg-accent" : "bg-notes"}`}
+            ${isRoot(normalized) ? "bg-tertiary" : isNoteIncluded(normalized) ? "bg-accent" : "bg-notes"}`}
           />
         );
       })}
@@ -49,7 +69,7 @@ const Piano = ({ notes = [], root, selected }) => {
           <div
             key={i}
             className={`absolute h-7 w-3.5 border-[1.5px] border-t-[1px] rounded-sm rounded-t-none ${selected ? "border-primary" : "border-primary"} 
-            ${normalized === processedRoot ? "bg-tertiary" : processedNotes.includes(normalized) ? "bg-accent" : "bg-notes"}`}
+            ${isRoot(normalized) ? "bg-tertiary" : isNoteIncluded(normalized) ? "bg-accent" : "bg-notes"}`}
             style={{ left: `${position}px` }}
           />
         );

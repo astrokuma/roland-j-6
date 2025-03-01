@@ -3,9 +3,9 @@ import { Note } from "@tonaljs/tonal";
 import NoteTags from "./NoteTags";
 import { normalizeNote } from "../utils/notes";
 
-const ScaleButton = ({ scaleName, notes, root, matchedNotes, matchPercentage }) => {
-  const normalizedMatchedNotes = matchedNotes.map((n) => normalizeNote(n, root));
-  const normalizedScaleNotes = notes.map((n) => normalizeNote(n, root));
+const ScaleCard = ({ scaleName, notes, root, matchedNotes, matchPercentage }) => {
+  const normalizedMatchedNotes = matchedNotes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root))));
+  const normalizedScaleNotes = notes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root))));
   const missingNotes = normalizedMatchedNotes.filter((n) => !normalizedScaleNotes.includes(n));
 
   return (
@@ -29,4 +29,4 @@ const ScaleButton = ({ scaleName, notes, root, matchedNotes, matchPercentage }) 
   );
 };
 
-export default ScaleButton;
+export default ScaleCard;

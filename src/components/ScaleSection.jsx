@@ -1,44 +1,50 @@
 import React, { useMemo } from "react";
 import * as Scale from "@tonaljs/scale";
 import { Note } from "@tonaljs/tonal";
-import ScaleDisplay from "./ScaleDisplay";
+import ScaleCard from "./ScaleCard";
 import NoteTags from "./NoteTags";
 import { normalizeNote } from "../utils/notes";
 
 const SCALE_MODES = ["major", "minor", "dorian", "mixolydian", "lydian", "phrygian", "locrian", "harmonic minor", "melodic minor", "major pentatonic", "minor pentatonic", "blues", "whole tone"];
 
 const findMatchingScales = (inputNotes, root) => {
-  if (!inputNotes.length || !root) return [];
+  if (!inputNotes.length) return [];
 
-  // 1. Get original and simplified root (Tonal.js compatible)
-  const originalRoot = Note.pitchClass(root);
-  const simplifiedRoot = Note.simplify(originalRoot); // e.g., A# → Bb
+  // Even if there's no root in the chord, we need a reference note for the scale
+  // Use the first note of the chord if no root is specified
+  const scaleRoot = root || (inputNotes.length > 0 ? Note.pitchClass(inputNotes[0]) : null);
+  if (!scaleRoot) return [];
 
-  // 2. Normalize input notes to original root's accidental
-  const normalizedInputNotes = inputNotes.map((n) => normalizeNote(n, originalRoot));
-  const uniqueNotes = [...new Set(normalizedInputNotes)];
+  // Simplify input notes to enharmonic equivalents
+  const simplifiedInputNotes = inputNotes.map((n) => {
+    const pc = Note.pitchClass(n);
+    return Note.simplify(pc);
+  });
+  const uniqueNotes = [...new Set(simplifiedInputNotes)];
 
   return SCALE_MODES.flatMap((mode) => {
     try {
-      // 3. Generate scale with simplified root
-      const scale = Scale.scale(`${simplifiedRoot} ${mode}`);
+      const scale = Scale.scale(`${scaleRoot} ${mode}`);
       if (scale.empty) return null;
 
-      // 4. Convert scale notes back to original root's accidental
-      const scaleNotes = scale.notes.map(
-        (n) => normalizeNote(n, originalRoot) // Key fix here
-      );
+      // Simplify scale notes for comparison and display
+      const simplifiedScaleNotes = scale.notes.map((n) => Note.simplify(n));
 
-      // 5. Compare notes in original accidental context
-      const matchedNotes = uniqueNotes.filter((n) => scaleNotes.includes(n));
+      // Find matches using simplified notes
+      const matchedNotes = uniqueNotes.filter((n) => {
+        // Check if the note or its enharmonic equivalent is in the scale
+        const enharmonic = Note.enharmonic(n);
+        return simplifiedScaleNotes.includes(n) || simplifiedScaleNotes.includes(enharmonic);
+      });
 
       const match = (matchedNotes.length / uniqueNotes.length) * 100;
 
       return {
-        name: `${originalRoot} ${mode}`,
-        notes: scaleNotes,
-        match: Number.isFinite(match) ? match : 0, // Force valid number
-        root: originalRoot,
+        name: `${scaleRoot} ${mode}`,
+        // Use simplified scale notes first, then normalize them for display consistency
+        notes: simplifiedScaleNotes.map((n) => normalizeNote(n, scaleRoot)),
+        match: Number.isFinite(match) ? match : 0,
+        root: scaleRoot,
       };
     } catch {
       return null;
@@ -49,9 +55,11 @@ const findMatchingScales = (inputNotes, root) => {
     .slice(0, 8);
 };
 
-const ScaleBox = ({ selectedChords = [] }) => {
+const ScaleSection = ({ selectedChords = [] }) => {
+  // Extract only the actual notes from the chords, without adding the root
   const allNotes = useMemo(() => selectedChords.flatMap((chord) => (chord.notes || []).map((n) => normalizeNote(n, chord.root)).filter(Boolean)), [selectedChords]);
 
+  // Use the root from the first chord for scale generation
   const root = selectedChords[0]?.root;
   const scales = useMemo(() => findMatchingScales(allNotes, root), [allNotes, root]);
 
@@ -68,14 +76,14 @@ const ScaleBox = ({ selectedChords = [] }) => {
                 notes={uniqueNotesArray}
                 root={root}
                 matchedNotes={uniqueNotesArray}
-                isScaleDisplay={false}
+                isScaleCard={false}
                 missingNotes={[]}
               />
             </div>
           </div>
           <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4 w-full">
             {scales.map((scale, i) => (
-              <ScaleDisplay
+              <ScaleCard
                 key={i}
                 scaleName={scale.name}
                 notes={scale.notes}
@@ -95,4 +103,4 @@ const ScaleBox = ({ selectedChords = [] }) => {
   );
 };
 
-export default ScaleBox;
+export default ScaleSection;

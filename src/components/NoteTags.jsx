@@ -14,12 +14,23 @@ const NoteTags = ({ notes = [], root, matchedNotes, isScaleDisplay, missingNotes
 
   const normalizedRoot = root ? normalize(root, root) : null;
 
+  // Check if a note matches any note in matchedNotes, considering enharmonic equivalents
+  const isNoteMatched = (note) => {
+    if (!matchedNotes) return false;
+
+    const simplifiedNote = Note.simplify(note);
+    const simplifiedMatched = matchedNotes.map((n) => Note.simplify(normalize(n, root)));
+
+    return simplifiedMatched.includes(simplifiedNote) || simplifiedMatched.includes(Note.enharmonic(simplifiedNote)) || simplifiedMatched.some((n) => Note.enharmonic(n) === simplifiedNote);
+  };
+
   return (
     <div className="flex flex-wrap justify-center gap-1.5 ">
       {uniqueAllNotes.map((note, index) => {
         const displayNote = normalize(note, root);
-        const isRoot = displayNote === normalizedRoot;
-        const isMatched = matchedNotes?.includes(note);
+        const isRoot = normalizedRoot && (displayNote === normalizedRoot || Note.enharmonic(displayNote) === normalizedRoot);
+
+        const isMatched = isNoteMatched(displayNote);
         const isMissing = safeMissingNotes.includes(note);
 
         let bgColor;

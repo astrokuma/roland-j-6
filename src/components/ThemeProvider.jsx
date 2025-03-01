@@ -30,9 +30,6 @@ const ThemeProvider = ({ children }) => {
           eager: true,
         });
 
-        // Debug: Log found theme files
-        console.log("Theme files found:", Object.keys(themeModules));
-
         const themes = Object.entries(themeModules).reduce((acc, [path, css]) => {
           const themeName = path.match(/\/themes\/(.*)\.css/)[1];
           acc[themeName] = css;
