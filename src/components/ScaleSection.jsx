@@ -3,7 +3,7 @@ import * as Scale from "@tonaljs/scale";
 import { Note } from "@tonaljs/tonal";
 import ScaleCard from "./ScaleCard";
 import NoteTags from "./NoteTags";
-import { normalizeNote } from "../utils/notes";
+import { normalizeNote, isRootPresent } from "../utils/notes";
 
 const SCALE_MODES = ["major", "minor", "dorian", "mixolydian", "lydian", "phrygian", "locrian", "harmonic minor", "melodic minor", "major pentatonic", "minor pentatonic", "blues", "whole tone"];
 
@@ -24,8 +24,7 @@ const findMatchingScales = (inputNotes, root) => {
   const uniqueNotes = [...new Set(simplifiedInputNotes)];
 
   // Check if root is in the actual notes
-  const normalizedRoot = Note.simplify(Note.pitchClass(scaleRoot));
-  const rootIsPresent = uniqueNotes.some((n) => n === normalizedRoot || Note.enharmonic(n) === normalizedRoot || normalizedRoot === Note.enharmonic(n));
+  const rootIsPresent = isRootPresent(scaleRoot, uniqueNotes);
 
   return SCALE_MODES.flatMap((mode) => {
     try {

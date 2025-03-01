@@ -1,16 +1,14 @@
 import React from "react";
 import { Note } from "@tonaljs/tonal";
-import { normalizeNote } from "../utils/notes";
+import { normalizeNote, isRootPresent } from "../utils/notes";
 
 const Piano = ({ notes = [], root, selected }) => {
   // Process the actual notes from the chord
   const processedNotes = [...new Set(notes.map((n) => Note.simplify(Note.pitchClass(normalizeNote(n, root)))))];
 
-  // Check if root is actually present in the notes
   const normalizedRoot = root ? Note.simplify(Note.pitchClass(normalizeNote(root, root))) : null;
 
-  // Check if root is actually present in the notes array (directly or as enharmonic equivalent)
-  const rootIsPresent = normalizedRoot && processedNotes.some((n) => n === normalizedRoot || Note.enharmonic(n) === normalizedRoot || Note.enharmonic(normalizedRoot) === n);
+  const rootIsPresent = isRootPresent(root, notes);
 
   // Get the preferred accidental style from the first note
   const firstNote = notes[0] || "";

@@ -2,7 +2,7 @@ import React from "react";
 import Piano from "./Piano";
 import NoteTags from "./NoteTags";
 import { Note } from "@tonaljs/tonal";
-import { normalizeNote } from "../utils/notes"; // Added import
+import { normalizeNote, isRootPresent } from "../utils/notes"; // Added import
 
 const ScaleCard = ({ scaleName, notes = [], root, matchedNotes = [], matchPercentage = 0 }) => {
   // Normalize and simplify scale notes
@@ -15,8 +15,7 @@ const ScaleCard = ({ scaleName, notes = [], root, matchedNotes = [], matchPercen
   const missingNotes = simplifiedMatchedNotes.filter((n) => !normalizedScaleNotes.includes(n));
 
   // Check root presence using normalized values
-  const normalizedRoot = root ? Note.simplify(Note.pitchClass(normalizeNote(root, root))) : null;
-  const rootIsPresent = normalizedRoot && simplifiedMatchedNotes.some((n) => n === normalizedRoot || Note.enharmonic(n) === normalizedRoot || Note.enharmonic(normalizedRoot) === n);
+  const rootIsPresent = isRootPresent(root, simplifiedMatchedNotes);
 
   return (
     <li className="bg-primary rounded-lg overflow-hidden">

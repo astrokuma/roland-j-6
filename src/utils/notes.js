@@ -21,4 +21,15 @@ export const normalizeNote = (note, root) => {
 };
 
 export const getTonalSafeName = (note) => Note.pitchClass(note);
-export { getPitchClassNumber }; // Add this export
+
+export const isRootPresent = (root, notes) => {
+  if (!root || !notes?.length) return false;
+
+  const normalizedRoot = Note.simplify(Note.pitchClass(normalizeNote(root, root)));
+  return notes.some((n) => {
+    const note = Note.simplify(Note.pitchClass(normalizeNote(n, root)));
+    return note === normalizedRoot || Note.enharmonic(note) === normalizedRoot || Note.enharmonic(normalizedRoot) === note;
+  });
+};
+
+export { getPitchClassNumber };
