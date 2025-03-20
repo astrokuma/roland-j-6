@@ -3,10 +3,10 @@ import ColorModeToggle from "./ColorModeToggle";
 
 const Header = () => (
   <div className="col-span-12 py-2 bg-primary rounded-lg">
-    <p className="flex text-accent text-lg leading-none font-black text-center  items-center justify-around">
-      Roland J · 6
+    <h1 className="flex text-accent text-lg leading-none font-black text-center  items-center justify-around">
+      Roland J-6 Chords
       <ColorModeToggle />
-    </p>
+    </h1>
   </div>
 );
 
