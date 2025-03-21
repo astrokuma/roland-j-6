@@ -1,0 +1,16 @@
+[data-theme="gold"][data-color-mode="light"] {
+  --primary: #ffe491;
+  --notes: #fffbdc;
+  --secondary: #8c6700;
+  --tertiary: #edb009;
+  --accent: #c99300;
+  --background: #fffdf2;
+}
+[data-theme="gold"][data-color-mode="dark"] {
+  --primary: #15120e;
+  --notes: #25221a;
+  --secondary: #edb009;
+  --tertiary: #ffd700;
+  --accent: #966e00;
+  --background: #000000;
+}
