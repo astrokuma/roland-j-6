@@ -3,7 +3,7 @@
   --notes: #fff5e9;
   --secondary: #dec097;
   --tertiary: #d5a189;
-  --accent: #d4b7a0;
+  --accent: #cdb19a;
   --background: #e8d4b8;
 }
 [data-theme="nude"][data-color-mode="dark"] {
@@ -12,5 +12,5 @@
   --secondary: #26190f;
   --tertiary: #bb873e;
   --accent: #967549;
-  --background: #211312;
+  --background: #0f0906;
 }
