@@ -4,41 +4,58 @@ import * as Tone from "tone";
 const useAudioPlayer = () => {
   const synth = useRef(null);
   const filter = useRef(null);
+  const limiter = useRef(null);
+  const volume = useRef(null);
   const sequence = useRef(null);
 
-  // We need a ref to hold the current chords so the effect can access them
-  // without needing them passed in as an argument
   const currentChordsRef = useRef([]);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(110);
-  const [playMode, setPlayMode] = useState("chord");
 
+  // -- STATE --
+  const [playMode, setPlayMode] = useState("chord");
   const [arpSettings, setArpSettings] = useState({
     type: "up",
     octaves: 1,
     pattern: [true, true, true, true],
     subdivision: "8n",
+    gate: 0.5,
   });
+
+  // -- REFS (The secret to Realtime changes) --
+  // We mirror state in refs so the sequencer can read the *latest* values
+  // without needing to restart the loop.
+  const playModeRef = useRef(playMode);
+  const arpSettingsRef = useRef(arpSettings);
+
+  useEffect(() => {
+    playModeRef.current = playMode;
+  }, [playMode]);
+  useEffect(() => {
+    arpSettingsRef.current = arpSettings;
+  }, [arpSettings]);
 
   const [synthParams, setSynthParams] = useState({
     waveform: "sawtooth",
     attack: 0.05,
     decay: 0.2,
-    sustain: 0.4,
-    release: 1.5,
-    cutoff: 2000,
-    resonance: 1,
-    volume: -8,
+    sustain: 0.3,
+    release: 1.0,
+    cutoff: 2500,
+    resonance: 2,
+    masterVolume: -6,
   });
 
   // 1. Initialize Audio Engine
   useEffect(() => {
-    filter.current = new Tone.Filter(synthParams.cutoff, "lowpass", -24).toDestination();
+    limiter.current = new Tone.Limiter(-1).toDestination();
+    volume.current = new Tone.Volume(synthParams.masterVolume).connect(limiter.current);
+    filter.current = new Tone.Filter(synthParams.cutoff, "lowpass", -24).connect(volume.current);
     filter.current.Q.value = synthParams.resonance;
 
     synth.current = new Tone.PolySynth(Tone.Synth, {
-      maxPolyphony: 32, // High polyphony prevents voice stealing/clicking
+      maxPolyphony: 16,
       oscillator: { type: synthParams.waveform },
       envelope: {
         attack: synthParams.attack,
@@ -46,19 +63,20 @@ const useAudioPlayer = () => {
         sustain: synthParams.sustain,
         release: synthParams.release,
       },
-      volume: synthParams.volume,
     }).connect(filter.current);
 
     return () => {
       synth.current?.dispose();
       filter.current?.dispose();
+      volume.current?.dispose();
+      limiter.current?.dispose();
       sequence.current?.dispose();
     };
   }, []);
 
   // 2. Sync Params
   useEffect(() => {
-    if (synth.current && filter.current) {
+    if (synth.current && filter.current && volume.current) {
       synth.current.set({
         oscillator: { type: synthParams.waveform },
         envelope: {
@@ -67,10 +85,10 @@ const useAudioPlayer = () => {
           sustain: synthParams.sustain,
           release: synthParams.release,
         },
-        volume: synthParams.volume,
       });
       filter.current.frequency.rampTo(synthParams.cutoff, 0.1);
       filter.current.Q.rampTo(synthParams.resonance, 0.1);
+      volume.current.volume.rampTo(synthParams.masterVolume, 0.1);
     }
   }, [synthParams]);
 
@@ -78,15 +96,12 @@ const useAudioPlayer = () => {
     Tone.Transport.bpm.value = bpm;
   }, [bpm]);
 
-  // 3. Arp Note Logic
   const getArpNotes = useCallback((notes, type, octaves) => {
     let pool = [...notes];
     if (octaves > 1) {
       const upper = notes.map((n) => Tone.Frequency(n).transpose(12).toNote());
       pool = [...pool, ...upper];
     }
-
-    // Simple sort by pitch
     const sorted = pool.sort((a, b) => Tone.Frequency(a).toMidi() - Tone.Frequency(b).toMidi());
 
     if (type === "down") return sorted.reverse();
@@ -95,20 +110,31 @@ const useAudioPlayer = () => {
     return sorted;
   }, []);
 
-  // 4. The Sequencer
+  // 3. Sequencer Logic
   const startSequencer = useCallback(
     (chords) => {
-      // Update ref so hot-swap knows what to play
+      // If we are already playing and just changing chords, update the ref and return
+      // (This keeps the beat locked)
+      const wasPlaying = Tone.Transport.state === "started";
       currentChordsRef.current = chords;
 
-      // Dispose old sequence to prevent overlap
-      if (sequence.current) sequence.current.dispose();
+      // Only create a new sequence if one doesn't exist
+      if (sequence.current) {
+        if (!wasPlaying) {
+          Tone.Transport.start();
+          setIsPlaying(true);
+        }
+        return;
+      }
 
-      let stepIndex = 0; // Local variable, resets every time we start
+      let stepIndex = 0;
 
       sequence.current = new Tone.Sequence(
         (time, _) => {
-          // Logic: 1 Bar (16 steps) per chord
+          // READ FROM REFS (Realtime)
+          const currentMode = playModeRef.current;
+          const currentSettings = arpSettingsRef.current;
+
           const stepsPerChord = 16;
           const totalSteps = currentChordsRef.current.length * stepsPerChord;
           const currentStep = stepIndex % totalSteps;
@@ -117,47 +143,39 @@ const useAudioPlayer = () => {
 
           if (!activeChord) return;
 
-          // Pattern Gate: map 16 steps to 4 beat pattern
           const patternStep = Math.floor((currentStep % 16) / 4);
-          const isStepActive = arpSettings.pattern[patternStep];
+          const isStepActive = currentSettings.pattern[patternStep];
+
+          // Use settings from Ref
+          const duration = Tone.Time("4n").toSeconds() * currentSettings.gate;
 
           if (isStepActive) {
-            if (playMode === "chord") {
-              // Play Chord on the downbeat of the pattern block
+            if (currentMode === "chord") {
               if (currentStep % 4 === 0) {
-                synth.current.triggerAttackRelease(activeChord.notes, "4n", time);
+                synth.current.triggerAttackRelease(activeChord.notes, duration, time);
               }
             } else {
-              // Play Arp
-              const notes = getArpNotes(activeChord.notes, arpSettings.type, arpSettings.octaves);
+              const notes = getArpNotes(activeChord.notes, currentSettings.type, currentSettings.octaves);
               const arpNoteIndex = currentStep % notes.length;
-              synth.current.triggerAttackRelease(notes[arpNoteIndex], "8n", time);
+
+              const arpDuration = Tone.Time("8n").toSeconds() * currentSettings.gate;
+              synth.current.triggerAttackRelease(notes[arpNoteIndex], arpDuration, time);
             }
           }
-
           stepIndex++;
         },
         [0],
         "16n",
       ).start(0);
 
-      if (Tone.Transport.state !== "started") {
-        Tone.Transport.start();
-      }
+      Tone.Transport.start();
       setIsPlaying(true);
     },
-    [playMode, arpSettings, getArpNotes],
+    [getArpNotes],
   );
 
-  // 5. Hot-Swap Effect
-  // If settings change while playing, restart the sequencer instantly
-  useEffect(() => {
-    if (isPlaying && currentChordsRef.current.length > 0) {
-      startSequencer(currentChordsRef.current);
-    }
-    // We purposefully exclude 'isPlaying' from deps to avoid double-trigger on start
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playMode, arpSettings, startSequencer]);
+  // NOTE: Removed the "Hot Swap" useEffect entirely.
+  // The Refs handle the updates automatically inside the loop.
 
   const playChord = (notes) => {
     if (Tone.context.state !== "running") Tone.start();
@@ -166,12 +184,13 @@ const useAudioPlayer = () => {
 
   const stopSequence = useCallback(() => {
     Tone.Transport.stop();
+    // We do NOT dispose the sequence here if we want to resume,
+    // but for a true "Stop", disposing is safer to reset state.
     if (sequence.current) {
       sequence.current.dispose();
       sequence.current = null;
     }
     setIsPlaying(false);
-    // REMOVED: stepIndex = 0; (This caused the crash)
   }, []);
 
   return {
