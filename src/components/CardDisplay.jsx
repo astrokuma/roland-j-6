@@ -1,11 +1,18 @@
 import React from "react";
 import { Card } from "./Card";
+import useAudioPlayer from "../hooks/useAudioPlayer"; // Import the hook
 
 const CardDisplay = ({ chords, selectedNotes, handleChordToggle, selectionOrder, bankId }) => {
+  const { playChord } = useAudioPlayer(); // Initialize audio
+
   const handleCardClick = (chord) => {
     const uniqueId = `${bankId}-${chord.button}`;
     const isSelected = selectedNotes.some((notes) => notes.uniqueId === uniqueId);
 
+    // Play the audio
+    playChord(chord.notes);
+
+    // Toggle selection
     handleChordToggle(chord, uniqueId, isSelected);
   };
 
@@ -18,11 +25,10 @@ const CardDisplay = ({ chords, selectedNotes, handleChordToggle, selectionOrder,
         return (
           <Card
             key={uniqueId}
-            onClick={() => handleCardClick(chord)}
+            onClick={() => handleCardClick(chord)} // Passed the updated handler
             selected={isSelected}
             chord={chord}
             selectionOrder={selectionOrder}
-            num={chord.button}
             uniqueId={uniqueId}
           />
         );
