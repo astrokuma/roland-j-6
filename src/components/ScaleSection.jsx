@@ -1,111 +1,59 @@
 import React, { useMemo } from "react";
-import * as Scale from "@tonaljs/scale";
 import { Note } from "@tonaljs/tonal";
 import ScaleCard from "./ScaleCard";
-import NoteTags from "./NoteTags";
-import { normalizeNote, isRootPresent } from "../utils/notes";
+import { findMatchingScales } from "../utils/scales";
+import { pcName, usesFlats } from "../utils/chordTheory";
 
-const SCALE_MODES = ["major", "minor", "dorian", "mixolydian", "lydian", "phrygian", "locrian", "harmonic minor", "melodic minor", "major pentatonic", "minor pentatonic", "blues", "whole tone"];
+const ScaleSection = ({ chords, focusScale, onFocusScale }) => {
+  const allNotes = useMemo(() => chords.flatMap((chord) => chord.notes), [chords]);
+  const chordChromas = useMemo(() => new Set(allNotes.map((n) => Note.chroma(n))), [allNotes]);
+  const firstRoot = chords[0] ? Note.chroma(chords[0].root) : undefined;
+  const scales = useMemo(() => findMatchingScales(allNotes, { preferredTonic: firstRoot }), [allNotes, firstRoot]);
+  const preferFlats = chords.some((c) => usesFlats(c.name));
 
-const findMatchingScales = (inputNotes, root) => {
-  if (!inputNotes.length) return [];
-
-  // Even if there's no root in the chord, we need a reference note for the scale
-  // Use the first note of the chord if no root is specified
-  const scaleRoot = root || (inputNotes.length > 0 ? Note.pitchClass(inputNotes[0]) : null);
-  if (!scaleRoot) return [];
-
-  // Process notes and check if root is actually in the notes
-  const simplifiedInputNotes = inputNotes.map((n) => {
-    const pc = Note.pitchClass(n);
-    return Note.simplify(pc);
-  });
-
-  const uniqueNotes = [...new Set(simplifiedInputNotes)];
-
-  // Check if root is in the actual notes
-  const rootIsPresent = isRootPresent(scaleRoot, uniqueNotes);
-
-  return SCALE_MODES.flatMap((mode) => {
-    try {
-      const scale = Scale.scale(`${scaleRoot} ${mode}`);
-      if (scale.empty) return null;
-
-      // Simplify scale notes for comparison and display
-      const simplifiedScaleNotes = scale.notes.map((n) => Note.simplify(n));
-
-      // Find matches using simplified notes
-      const matchedNotes = uniqueNotes.filter((n) => {
-        // Check if the note or its enharmonic equivalent is in the scale
-        const enharmonic = Note.enharmonic(n);
-        return simplifiedScaleNotes.includes(n) || simplifiedScaleNotes.includes(enharmonic);
-      });
-
-      const match = (matchedNotes.length / uniqueNotes.length) * 100;
-
-      return {
-        name: `${scaleRoot} ${mode}`,
-        // Use simplified scale notes first, then normalize them for display consistency
-        notes: simplifiedScaleNotes.map((n) => normalizeNote(n, scaleRoot)),
-        match: Number.isFinite(match) ? match : 0,
-        root: scaleRoot,
-        rootIsPresent: rootIsPresent, // Pass this info to ScaleCard
-      };
-    } catch {
-      return null;
-    }
-  })
-    .filter((scale) => scale && !isNaN(scale.match))
-    .sort((a, b) => b.match - a.match)
-    .slice(0, 8);
-};
-
-const ScaleSection = ({ selectedChords = [] }) => {
-  // Extract only the actual notes from the chords, without adding the root
-  const allNotes = useMemo(() => selectedChords.flatMap((chord) => (chord.notes || []).map((n) => normalizeNote(n, chord.root)).filter(Boolean)), [selectedChords]);
-
-  // Use the root from the first chord for scale generation
-  const root = selectedChords[0]?.root;
-  const scales = useMemo(() => findMatchingScales(allNotes, root), [allNotes, root]);
-
-  let uniqueNotesArray = Array.isArray(allNotes) ? [...new Set(allNotes)] : [];
+  if (!chords.length) return null;
 
   return (
-    <div className="w-full 2xl:max-w-[85%] px-2 mx-auto flex flex-col gap-4">
-      {scales.length > 0 ? (
-        <>
-          <div className="flex mt-4">
-            <div className="bg-primary p-4 rounded-lg break-words flex items-center gap-4">
-              <span className="text-tertiary font-bold">Chord notes:</span>
-              <NoteTags
-                notes={uniqueNotesArray}
-                root={root}
-                matchedNotes={uniqueNotesArray}
-                isScaleCard={false}
-                missingNotes={[]}
-              />
-            </div>
-          </div>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4 w-full">
-            {scales.map((scale, i) => (
-              <ScaleCard
-                key={i}
-                scaleName={scale.name}
-                notes={scale.notes}
-                root={scale.root}
-                matchedNotes={allNotes}
-                matchedCount={scale.matchedCount}
-                totalChordNotes={scale.totalChordNotes}
-                matchPercentage={scale.match}
-                rootIsPresent={scale.rootIsPresent}
-              />
+    <section
+      aria-labelledby="scale-heading"
+      className="w-full max-w-7xl px-2 mx-auto flex flex-col gap-3 mt-8"
+    >
+      <div className="bg-primary p-4 rounded-xl flex flex-wrap items-center gap-3">
+        <h2
+          id="scale-heading"
+          className="text-tertiary font-black"
+        >
+          Scales for this sequence
+        </h2>
+        <div className="flex flex-wrap gap-1.5">
+          {[...chordChromas]
+            .sort((a, b) => a - b)
+            .map((chroma) => (
+              <span
+                key={chroma}
+                className={`flex justify-center items-center font-black rounded-full w-8 h-8 text-xs ${chroma === firstRoot ? "bg-tertiary" : "bg-accent"} text-primary`}
+              >
+                {pcName(chroma, preferFlats)}
+              </span>
             ))}
-          </ul>
-        </>
+        </div>
+      </div>
+      {scales.length ? (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4">
+          {scales.map((scale) => (
+            <ScaleCard
+              key={scale.name}
+              scale={scale}
+              chordChromas={chordChromas}
+              isFocused={focusScale?.name === scale.name}
+              onFocus={() => onFocusScale(focusScale?.name === scale.name ? null : scale)}
+            />
+          ))}
+        </ul>
       ) : (
-        <div className="w-full text-center rounded-t-sm bg-bg text-primary font-semibold py-2 px-4">SCALE: No matching scales found</div>
+        <p className="text-accent font-bold text-center py-2">No matching scales found.</p>
       )}
-    </div>
+    </section>
   );
 };
 

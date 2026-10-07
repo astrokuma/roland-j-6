@@ -1,67 +1,47 @@
 import React from "react";
-import { cycleIndex } from "../utils/cycleIndex";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
 
-const StepperSelect = ({ items = [], valueKey = "value", labelKey = "label", selectedIndex, onChange, renderOption }) => {
-  const handleIndexChange = (newIndex) => {
-    onChange(items[newIndex], newIndex);
-  };
-
-  const handleIncrement = () => {
-    handleIndexChange(cycleIndex(selectedIndex, items.length, 1));
-  };
-
-  const handleDecrement = () => {
-    handleIndexChange(cycleIndex(selectedIndex, items.length, -1));
-  };
-
-  if (!items.length) return null;
-
-  return (
-    <div className="flex items-center justify-center gap-2 w-fit">
-      <StepperButton
-        direction="prev"
-        onClick={handleDecrement}
-      />
-
-      <div className="relative inline-block">
-        <select
-          value={selectedIndex}
-          onChange={(e) => handleIndexChange(parseInt(e.target.value))}
-          className="bg-accent custom-scrollbar rounded-full min-w-52 sm:min-w-60 py-2 shadow-sm appearance-none text-center text-notes cursor-pointer"
-        >
-          {items.map((item, index) => (
-            <option
-              key={item[valueKey]}
-              value={index}
-            >
-              {renderOption ? renderOption(item) : `${item[labelKey]}`}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <StepperButton
-        direction="next"
-        onClick={handleIncrement}
-      />
-    </div>
-  );
-};
-
-const StepperButton = ({ direction, onClick }) => (
+const StepperButton = ({ onClick, label, children }) => (
   <button
-    className="relative flex items-center justify-center rounded-full shadow-sm bg-accent appearance-none cursor-pointer h-10 w-10"
+    className="flex shrink-0 items-center justify-center rounded-full bg-accent text-primary h-10 w-10 hover:brightness-110"
     onClick={onClick}
+    aria-label={label}
   >
-    {direction === "prev" ? (
-      <div className="h-[3px] w-3 bg-notes"></div>
-    ) : (
-      <>
-        <div className="absolute h-[3px] w-3 bg-notes"></div>
-        <div className="absolute h-3 w-[3px] bg-notes"></div>
-      </>
-    )}
+    {children}
   </button>
+);
+
+/** −/+ stepper around a native select, like turning the J-6 VALUE knob. */
+const StepperSelect = ({ options, value, onChange, onStep, label }) => (
+  <div className="flex items-center gap-2 min-w-0 flex-1">
+    <StepperButton
+      onClick={() => onStep(-1)}
+      label={`Previous ${label}`}
+    >
+      <MinusIcon className="w-5 h-5" />
+    </StepperButton>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      aria-label={label}
+      className="custom-scrollbar flex-1 min-w-0 h-10 rounded-full bg-accent text-primary font-black text-center appearance-none cursor-pointer px-3 truncate"
+    >
+      {options.map((option) => (
+        <option
+          key={option.value}
+          value={option.value}
+        >
+          {option.label}
+        </option>
+      ))}
+    </select>
+    <StepperButton
+      onClick={() => onStep(1)}
+      label={`Next ${label}`}
+    >
+      <PlusIcon className="w-5 h-5" />
+    </StepperButton>
+  </div>
 );
 
 export default StepperSelect;

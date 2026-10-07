@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--background);
+  }
+
+  button {
+    touch-action: manipulation;
+  }
+}
+
 @layer components {
   /* For WebKit browsers */
   .custom-scrollbar::-webkit-scrollbar {

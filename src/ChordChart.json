@@ -154,12 +154,14 @@
         {
           "name": "D7#9",
           "notes": ["D#3", "G3", "C#4", "F#4"],
-          "root": "D#"
+          "root": "D#",
+          "analyzeAs": "D#7#9",
+          "remark": "Roland's list names this D7#9, but the notes it plays form D#7#9."
         },
         {
           "name": "E7#9",
           "notes": ["E3", "G#3", "D4", "G4"],
-          "root": "E#"
+          "root": "E"
         },
         {
           "name": "FM9",
@@ -210,7 +212,8 @@
         {
           "name": "C#7#9",
           "notes": ["C#3", "F3", "B3", "D#4"],
-          "root": "C#"
+          "root": "C#",
+          "remark": "Named C#7#9, but the top note is D# (a natural 9), so it sounds as C#9."
         },
         {
           "name": "Dm9",
@@ -357,12 +360,13 @@
         {
           "name": "E7#9",
           "notes": ["E3", "G#3", "D4", "G4"],
-          "root": "E#"
+          "root": "E"
         },
         {
           "name": "Fm9",
           "notes": ["F2", "A3", "D#4", "G4"],
-          "root": "F"
+          "root": "F",
+          "remark": "Named Fm9, but it plays A natural (a major 3rd), so it sounds as F9."
         },
         {
           "name": "F#dim7",
@@ -768,7 +772,7 @@
         {
           "name": "G7#9",
           "notes": ["G2", "B3", "F4", "A#4"],
-          "root": "G#"
+          "root": "G"
         },
         {
           "name": "G#M7b5",
@@ -1225,7 +1229,9 @@
         {
           "name": "F#FM7",
           "notes": ["F#3", "A#3", "C#4", "F4"],
-          "root": "F#"
+          "root": "F#",
+          "analyzeAs": "F#M7",
+          "remark": "Listed as F#FM7 in Roland's chord list; it plays F#M7."
         },
         {
           "name": "GM7",
@@ -2053,7 +2059,7 @@
         {
           "name": "Cmb13",
           "notes": ["C3", "G3", "G#3", "D#4"],
-          "root": "Cb"
+          "root": "C"
         },
         {
           "name": "D#M7",
@@ -3576,7 +3582,7 @@
         {
           "name": "CM7#5",
           "notes": ["C4", "E4", "G#4", "B4"],
-          "root": "C#"
+          "root": "C"
         },
         {
           "name": "Dm7b5",
@@ -3626,7 +3632,7 @@
         {
           "name": "CM7#5/G#",
           "notes": ["G#4", "B4", "C5", "E5"],
-          "root": "C#"
+          "root": "C"
         }
       ]
     },
@@ -3703,7 +3709,7 @@
         {
           "name": "C5b9",
           "notes": ["C3", "C#3", "G3", "C4"],
-          "root": "Cb"
+          "root": "C"
         },
         {
           "name": "DbM7",
@@ -3723,7 +3729,7 @@
         {
           "name": "EM7#11",
           "notes": ["E3", "G#3", "A#3", "D#4"],
-          "root": "E#"
+          "root": "E"
         },
         {
           "name": "Fm9",
@@ -4520,7 +4526,7 @@
         {
           "name": "DM7#11",
           "notes": ["D3", "F#3", "G#3", "C#4"],
-          "root": "D#"
+          "root": "D"
         },
         {
           "name": "F#m11",
@@ -4571,7 +4577,7 @@
         {
           "name": "D7b9",
           "notes": ["D2", "F#3", "C4", "Eb4"],
-          "root": "Db"
+          "root": "D"
         },
         {
           "name": "EbM7",
@@ -4723,7 +4729,7 @@
         {
           "name": "CM7#5",
           "notes": ["G3", "G#3", "C4", "E4"],
-          "root": "C#"
+          "root": "C"
         },
         {
           "name": "Gm7",
@@ -4733,7 +4739,7 @@
         {
           "name": "G7#5",
           "notes": ["G3", "B3", "D#4", "F4"],
-          "root": "G#"
+          "root": "G"
         },
         {
           "name": "AbM7",
@@ -4840,7 +4846,7 @@
         {
           "name": "DMb7/D#",
           "notes": ["D#3", "F#3", "A3", "D4"],
-          "root": "Db"
+          "root": "D"
         },
         {
           "name": "GM7/F#",
@@ -4880,7 +4886,7 @@
         {
           "name": "Emb9/F",
           "notes": ["F3", "G3", "B3", "E4"],
-          "root": "Eb"
+          "root": "E"
         }
       ]
     },
@@ -5225,7 +5231,7 @@
         },
         {
           "name": "Db7sus",
-          "notes": ["Db3", "B3", "Eb4", "Eb4"],
+          "notes": ["Db3", "B3", "Eb4", "Gb4"],
           "root": "Db"
         },
         {
@@ -5235,7 +5241,7 @@
         },
         {
           "name": "Ebm7",
-          "notes": ["Eb3", "Bb3", "Db4", "Eb4"],
+          "notes": ["Eb3", "Bb3", "Db4", "Gb4"],
           "root": "Eb"
         },
         {
@@ -5246,11 +5252,11 @@
         {
           "name": "Fmb6",
           "notes": ["F3", "C4", "Db4", "Ab4"],
-          "root": "Fb"
+          "root": "F"
         },
         {
           "name": "GbM9",
-          "notes": ["Eb3", "Ab3", "Db4", "F4"],
+          "notes": ["Gb3", "Ab3", "Db4", "F4"],
           "root": "Gb"
         },
         {
@@ -5260,7 +5266,7 @@
         },
         {
           "name": "Ab7sus",
-          "notes": ["Ab3", "Bb3", "Db4", "Eb4"],
+          "notes": ["Ab3", "Bb3", "Db4", "Gb4"],
           "root": "Ab"
         },
         {
@@ -5275,7 +5281,7 @@
         },
         {
           "name": "Gb/B",
-          "notes": ["B3", "Db4", "Eb4", "Bb4"],
+          "notes": ["B3", "Db4", "Gb4", "Bb4"],
           "root": "Gb"
         }
       ]
@@ -5515,7 +5521,7 @@
         {
           "name": "F9#11",
           "notes": ["F4", "Eb5", "G5", "B5"],
-          "root": "F#"
+          "root": "F"
         },
         {
           "name": "Gsus13",
@@ -5551,7 +5557,7 @@
         {
           "name": "CM7#11",
           "notes": ["C3", "E4", "F#4", "B4"],
-          "root": "C#"
+          "root": "C"
         },
         {
           "name": "DbM7#11",
@@ -5576,7 +5582,7 @@
         {
           "name": "FM7#11",
           "notes": ["F3", "A4", "B4", "E5"],
-          "root": "F#"
+          "root": "F"
         },
         {
           "name": "F#m11",
@@ -6236,7 +6242,7 @@
         {
           "name": "Amb9/C",
           "notes": ["C4", "E4", "A#4", "A5"],
-          "root": "Ab"
+          "root": "A"
         },
         {
           "name": "Fadd9/C",
@@ -6581,7 +6587,7 @@
         {
           "name": "G13b9",
           "notes": ["G3", "F4", "Ab4", "E5"],
-          "root": "Gb"
+          "root": "G"
         },
         {
           "name": "AbMaj13",
