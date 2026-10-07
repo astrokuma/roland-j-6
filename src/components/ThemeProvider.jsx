@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { themes } from "../constants/themes";
 
 const ThemeContext = createContext();
+const DEFAULT_THEME = "emerald";
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
@@ -8,90 +10,60 @@ export const useTheme = () => {
   return context;
 };
 
+const readSaved = (key) => {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const save = (key, value) => {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Storage unavailable; the theme just won't persist.
+  }
+};
+
+const systemMode = () => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+const isKnownTheme = (name) => themes.some((t) => t.value === name);
+
+// index.html applies the saved theme before React loads (no flash); this keeps it in sync afterwards.
 const ThemeProvider = ({ children }) => {
-  const [themeName, setThemeName] = useState(localStorage.getItem("themeName") || "emerald");
-  const [colorMode, setColorMode] = useState(() => {
-    const savedMode = localStorage.getItem("colorMode");
-    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (!savedMode) {
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      return systemDark ? "dark" : "light";
-    }
-    return savedMode || (systemDark ? "dark" : "light");
+  const [themeName, setThemeName] = useState(() => {
+    const saved = readSaved("themeName");
+    return isKnownTheme(saved) ? saved : DEFAULT_THEME;
   });
-  const [themeStyles, setThemeStyles] = useState({});
-
-  // Load all theme CSS files
-  useEffect(() => {
-    const importThemes = async () => {
-      try {
-        const themeModules = import.meta.glob("../themes/*.css", {
-          as: "raw",
-          eager: true,
-        });
-
-        const themes = Object.entries(themeModules).reduce((acc, [path, css]) => {
-          const themeName = path.match(/\/themes\/(.*)\.css/)[1];
-          acc[themeName] = css;
-          return acc;
-        }, {});
-
-        setThemeStyles(themes);
-      } catch (error) {
-        console.error("Error loading themes:", error);
-      }
-    };
-    importThemes();
-  }, []);
+  // Follow the system setting until the person picks a mode themselves.
+  const [savedMode, setSavedMode] = useState(() => readSaved("colorMode"));
+  const [systemColorMode, setSystemColorMode] = useState(systemMode);
+  const colorMode = savedMode === "light" || savedMode === "dark" ? savedMode : systemColorMode;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleSystemChange = (e) => {
-      if (!localStorage.getItem("colorMode")) {
-        setColorMode(e.matches ? "dark" : "light");
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleSystemChange);
-    return () => mediaQuery.removeEventListener("change", handleSystemChange);
+    const onChange = (e) => setSystemColorMode(e.matches ? "dark" : "light");
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
   }, []);
 
-  // Apply theme and mode
   useEffect(() => {
-    if (!themeStyles[themeName]) return;
-
-    let styleElement = document.getElementById("theme-style");
-    if (!styleElement) {
-      styleElement = document.createElement("style");
-      styleElement.id = "theme-style";
-      document.head.appendChild(styleElement);
-    }
-
-    document.documentElement.removeAttribute("style");
-
-    styleElement.textContent = themeStyles[themeName];
-
     document.documentElement.setAttribute("data-theme", themeName);
     document.documentElement.setAttribute("data-color-mode", colorMode);
+    const background = getComputedStyle(document.documentElement).getPropertyValue("--primary").trim();
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", background);
+  }, [themeName, colorMode]);
 
-    document.documentElement.offsetHeight;
-
-    localStorage.setItem("themeName", themeName);
-    localStorage.setItem("colorMode", colorMode);
-  }, [themeName, colorMode, themeStyles]);
-
-  const switchTheme = (newTheme) => {
-    if (themeStyles[newTheme]) {
-      setThemeName(newTheme);
-    } else {
-      console.warn(`Theme ${newTheme} not found, resetting to default`);
-      setThemeName("Emerald");
-    }
+  const switchTheme = (name) => {
+    const next = isKnownTheme(name) ? name : DEFAULT_THEME;
+    setThemeName(next);
+    save("themeName", next);
   };
 
   const toggleColorMode = () => {
-    setColorMode((prev) => (prev === "light" ? "dark" : "light"));
+    const next = colorMode === "light" ? "dark" : "light";
+    setSavedMode(next);
+    save("colorMode", next);
   };
 
   return <ThemeContext.Provider value={{ themeName, colorMode, switchTheme, toggleColorMode }}>{children}</ThemeContext.Provider>;
