@@ -1,151 +1,174 @@
 import React from "react";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import Modal from "./Modal";
+import { Panel, Segmented, Slider } from "./controls";
+import { CHORUS_MODES, DEFAULT_SOUND, SOUND_PRESETS, WAVEFORMS } from "../audio/engine";
 
-// FIX: Component defined OUTSIDE the parent component
-const Slider = ({ label, param, value, onChange, min, max, step, suffix = "" }) => (
-  <div>
-    <label className="flex justify-between text-xs font-bold text-secondary mb-1 uppercase">
-      {label}{" "}
-      <span className="text-notes">
-        {value}
-        {suffix}
-      </span>
-    </label>
-    <input
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      value={value}
-      onChange={(e) => onChange(param, e.target.value)}
-      className="w-full h-2 bg-notes rounded-lg appearance-none cursor-pointer accent-accent"
-    />
-  </div>
-);
+const seconds = (v) => (v < 1 ? `${Math.round(v * 1000)} ms` : `${v.toFixed(1)} s`);
+const percent = (v) => `${Math.round(v * 100)}%`;
+const hertz = (v) => (v >= 1000 ? `${(v / 1000).toFixed(1)} kHz` : `${v} Hz`);
 
-const SoundControlModal = ({ isOpen, onClose, synthParams, setSynthParams, bpm, setBpm }) => {
-  if (!isOpen) return null;
-
-  const handleParamChange = (key, value) => {
-    setSynthParams((prev) => ({ ...prev, [key]: parseFloat(value) }));
-  };
+const SoundControlModal = ({ isOpen, onClose, sound, setSound }) => {
+  const set = (key) => (value) => setSound((prev) => ({ ...prev, [key]: value }));
+  const activePreset = SOUND_PRESETS.find((p) => Object.keys(p.sound).every((k) => p.sound[k] === sound[k]))?.name;
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Sound"
     >
-      {/* stopPropagation ensures clicking the modal doesn't close it */}
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-primary w-full max-w-lg rounded-2xl border border-accent shadow-2xl p-6 max-h-[90vh] overflow-y-auto"
-      >
-        <div className="flex justify-between items-center mb-6 border-b border-accent pb-4">
-          <h2 className="text-xl font-black text-tertiary">SYNTH ENGINE</h2>
-          <button onClick={onClose}>
-            <XMarkIcon className="w-5 h-5 text-secondary" />
-          </button>
+      <div className="space-y-4">
+        <Panel title="Presets">
+          <Segmented
+            label="Preset"
+            options={SOUND_PRESETS.map((p) => ({ id: p.name, label: p.name }))}
+            value={activePreset}
+            onChange={(name) => setSound({ ...SOUND_PRESETS.find((p) => p.name === name).sound, masterVolume: sound.masterVolume })}
+          />
+        </Panel>
+
+        <Panel>
+          <Slider
+            label="Volume"
+            value={sound.masterVolume}
+            onChange={set("masterVolume")}
+            min={-40}
+            max={0}
+            step={1}
+            format={(v) => `${v} dB`}
+          />
+          <div>
+            <p className="text-xs font-bold text-secondary uppercase mb-1">Waveform</p>
+            <Segmented
+              label="Waveform"
+              options={WAVEFORMS}
+              value={sound.waveform}
+              onChange={set("waveform")}
+            />
+          </div>
+        </Panel>
+
+        <Panel title="Filter">
+          <Slider
+            label="Cutoff"
+            value={sound.cutoff}
+            onChange={set("cutoff")}
+            min={100}
+            max={8000}
+            step={50}
+            format={hertz}
+          />
+          <Slider
+            label="Resonance"
+            value={sound.resonance}
+            onChange={set("resonance")}
+            min={0}
+            max={10}
+            step={0.1}
+          />
+        </Panel>
+
+        <Panel title="Envelope">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+            <Slider
+              label="Attack"
+              value={sound.attack}
+              onChange={set("attack")}
+              min={0.005}
+              max={2}
+              step={0.005}
+              format={seconds}
+            />
+            <Slider
+              label="Decay"
+              value={sound.decay}
+              onChange={set("decay")}
+              min={0.05}
+              max={2}
+              step={0.05}
+              format={seconds}
+            />
+            <Slider
+              label="Sustain"
+              value={sound.sustain}
+              onChange={set("sustain")}
+              min={0}
+              max={1}
+              step={0.05}
+              format={percent}
+            />
+            <Slider
+              label="Release"
+              value={sound.release}
+              onChange={set("release")}
+              min={0.05}
+              max={4}
+              step={0.05}
+              format={seconds}
+            />
+          </div>
+        </Panel>
+
+        <Panel title="Chorus">
+          <Segmented
+            label="Chorus"
+            options={CHORUS_MODES}
+            value={sound.chorus}
+            onChange={set("chorus")}
+          />
+        </Panel>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Panel title="Delay">
+            <Slider
+              label="Level"
+              value={sound.delayLevel}
+              onChange={set("delayLevel")}
+              min={0}
+              max={0.8}
+              step={0.01}
+              format={percent}
+            />
+            <Slider
+              label="Time"
+              value={sound.delayTime}
+              onChange={set("delayTime")}
+              min={0.05}
+              max={1}
+              step={0.01}
+              format={seconds}
+            />
+          </Panel>
+          <Panel title="Reverb">
+            <Slider
+              label="Level"
+              value={sound.reverbLevel}
+              onChange={set("reverbLevel")}
+              min={0}
+              max={0.8}
+              step={0.01}
+              format={percent}
+            />
+            <Slider
+              label="Time"
+              value={sound.reverbTime}
+              onChange={set("reverbTime")}
+              min={0.3}
+              max={8}
+              step={0.1}
+              format={seconds}
+            />
+          </Panel>
         </div>
 
-        <div className="space-y-6">
-          {/* Master Volume & BPM */}
-          <div className="grid grid-cols-2 gap-4 bg-background p-4 rounded-xl">
-            <div>
-              <label className="text-xs font-bold text-secondary uppercase block mb-1">Tempo</label>
-              <input
-                type="range"
-                min="60"
-                max="160"
-                value={bpm}
-                onChange={(e) => setBpm(e.target.value)}
-                className="w-full h-2 bg-notes rounded-lg accent-tertiary"
-              />
-              <div className="text-right text-xs font-bold text-accent mt-1">{bpm} BPM</div>
-            </div>
-            <Slider
-              label="Master Vol"
-              param="masterVolume"
-              value={synthParams.masterVolume}
-              onChange={handleParamChange}
-              min="-30"
-              max="0"
-              step="1"
-              suffix="dB"
-            />
-          </div>
-
-          {/* Filter */}
-          <div className="bg-background p-4 rounded-xl space-y-4">
-            <h3 className="text-xs font-bold text-notes uppercase tracking-widest">Filter</h3>
-            <Slider
-              label="Cutoff"
-              param="cutoff"
-              value={synthParams.cutoff}
-              onChange={handleParamChange}
-              min="100"
-              max="5000"
-              step="50"
-              suffix="Hz"
-            />
-            <Slider
-              label="Resonance"
-              param="resonance"
-              value={synthParams.resonance}
-              onChange={handleParamChange}
-              min="0"
-              max="10"
-              step="0.1"
-            />
-          </div>
-
-          {/* Envelope (ADSR) */}
-          <div className="bg-background p-4 rounded-xl">
-            <h3 className="text-xs font-bold text-notes uppercase tracking-widest mb-4">Envelope (ADSR)</h3>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-6">
-              <Slider
-                label="Attack"
-                param="attack"
-                value={synthParams.attack}
-                onChange={handleParamChange}
-                min="0"
-                max="2"
-                step="0.01"
-                suffix="s"
-              />
-              <Slider
-                label="Decay"
-                param="decay"
-                value={synthParams.decay}
-                onChange={handleParamChange}
-                min="0.1"
-                max="2"
-                step="0.1"
-                suffix="s"
-              />
-              <Slider
-                label="Sustain"
-                param="sustain"
-                value={synthParams.sustain}
-                onChange={handleParamChange}
-                min="0"
-                max="1"
-                step="0.05"
-              />
-              <Slider
-                label="Release"
-                param="release"
-                value={synthParams.release}
-                onChange={handleParamChange}
-                min="0.1"
-                max="4"
-                step="0.1"
-                suffix="s"
-              />
-            </div>
-          </div>
-        </div>
+        <button
+          onClick={() => setSound({ ...DEFAULT_SOUND })}
+          className="w-full py-2 rounded-xl bg-notes text-accent text-sm font-black hover:bg-accent hover:text-primary"
+        >
+          Reset sound
+        </button>
       </div>
-    </div>
+    </Modal>
   );
 };
 

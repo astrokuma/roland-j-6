@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#12352f" />
 
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -12,18 +13,36 @@
   <link rel="manifest" href="/site.webmanifest">
 
   <title>Roland J-6 Chord Bank Companion</title>
-  <meta name="description" content="Explore Roland J-6 chord banks and chords with full visualization. See all 100 J-6 chord patterns, track sequence order, and get scale suggestions for your synthesizer.">
+  <meta name="description" content="Explore Roland J-6 chord banks and chords with full visualization. See all 100 J-6 chord patterns, the exact notes each chord plays, what each voicing leaves out, and scale suggestions for your synthesizer.">
   <meta name="keywords" content="Roland J-6 Chord Bank, Roland J-6 Chords, Roland J-6 chord patterns, J-6 chord sequence, Roland synthesizer chords, J-6 chord helper">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Roland J-6 Chord Bank & Chords Visualizer">
   <meta property="og:description" content="View and manage Roland J-6 chord banks with interactive visualization. Track chord sequences and play order for your J-6 synthesizer.">
+  <meta property="og:image" content="/og-image.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Roland J-6 Chord Bank Companion">
   <meta property="twitter:description" content="Free visual tool for Roland J-6 users: Explore chord banks, view chord sequences, and see scale relationships. No signup required.">
+  <meta property="twitter:image" content="/og-image.png">
+
+  <!-- Apply the saved theme before first paint so the page never flashes unstyled. -->
+  <script>
+    (function () {
+      var theme = "emerald", mode = null;
+      try {
+        theme = localStorage.getItem("themeName") || theme;
+        mode = localStorage.getItem("colorMode");
+      } catch (e) {}
+      if (mode !== "light" && mode !== "dark") {
+        mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.setAttribute("data-color-mode", mode);
+    })();
+  </script>
 </head>
 
 <body class="bg-background">
